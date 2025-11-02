@@ -1,0 +1,2536 @@
+<!DOCTYPE html>
+<!-- REMOVED default dark class, JS will handle it -->
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- NEW: Updated Title -->
+    <title>Sumanth Udupi | Digital Atelier</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (as per your manifesto's "Typography as Character") -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Kalam:wght@300;400;700&family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* * Custom styles to bring the "Creative Manifesto" v3.0 to life.
+         * We're defining our font families and creating the
+         * tactile elements like washi tape and sticky notes.
+        */
+        
+        /* NEW: Part 6.3 - Accessibility (Reduced Motion) */
+        @media (prefers-reduced-motion: reduce) {
+          *,
+          *::before,
+          *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            animation-delay: -0.01ms !important;
+            scroll-behavior: auto !important;
+          }
+        }
+
+        /* NEW: Part 3.1 - Sophisticated Shadow System */
+        :root {
+          --shadow-contact: 0 1px 2px rgba(0,0,0,0.08);
+          --shadow-proximity: 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.04);
+          --shadow-elevated: 0 2px 5px rgba(0,0,0,0.05), 0 8px 20px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.06);
+          --shadow-dramatic: 0 10px 30px rgba(0,0,0,0.12), 0 30px 60px rgba(0,0,0,0.08), 0 50px 100px rgba(0,0,0,0.06);
+          --shadow-inset: inset 0 2px 4px rgba(0,0,0,0.06);
+        }
+
+        /* 1. Typography as Character */
+        .font-body { font-family: 'Inter', sans-serif; }
+        .font-display { font-family: 'Playfair Display', serif; }
+        .font-hand { font-family: 'Kalam', cursive; }
+        .font-mono { font-family: 'IBM Plex Mono', monospace; }
+
+        /* 2. The "Sticky Note" (for the Hero) - UPDATED Part 1.1 */
+        .sticky-note {
+            /* background-color: #fef9c3; /* bg-yellow-100 */
+            /* box-shadow: 0 4px 10px rgba(0,0,0,0.1); */
+            transform: rotate(2deg);
+            transition: all 0.3s ease;
+            animation: flutter 15s infinite ease-in-out;
+        }
+        
+        .sticky-note-yellow {
+            background: linear-gradient(135deg, #fffacd 0%, #fef3b7 100%);
+            box-shadow: 
+                2px 2px 8px rgba(255,223,0,0.2), /* Yellow glow */
+                0 3px 5px rgba(0,0,0,0.15);
+            border-bottom: 1px solid rgba(255,215,0,0.3); /* Shadow from adhesive strip */
+        }
+        
+        /* 2b. Add parallax movement to sticky-note */
+        .sticky-note {
+            /* We use CSS vars for smooth parallax. JS will update --mouse-x/y */
+            /* UPDATED: Parallax cut by 75% */
+            transform: rotate(2deg) translate(calc(var(--mouse-x, 0) * -0.005px), calc(var(--mouse-y, 0) * -0.005px));
+            transition: transform 0.1s linear, box-shadow 0.3s ease;
+        }
+
+        .sticky-note:hover {
+            /* Combine hover effects with parallax variables */
+            /* UPDATED: Parallax cut by 75% */
+            transform: rotate(0deg) scale(1.05) translate(calc(var(--mouse-x, 0) * -0.005px), calc(var(--mouse-y, 0) * -0.005px));
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+
+        /* 3. The "Washi Tape" (for project thumbnails) - UPDATED Part 1.1 */
+        /* REMOVED: Washi tape logic. The Polaroids will "lie" on the desk. */
+        .washi-tape {
+            display: none;
+        }
+        
+        /* 4. The "Polaroid" Project Card - UPDATED Part 4.1 (Physics) & 3.4 (Look) */
+        .project-card {
+            /* transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); */ /* REPLACED */
+            box-shadow: var(--shadow-proximity);
+            /* NEW: Part 4.1 */
+            transform-origin: top center; /* Pinned by tape at top */
+            transition: 
+                transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), /* Bounce */
+                box-shadow 0.3s ease;
+            /* Assign individual rotations */
+            --card-rotation: 0deg;
+        }
+        .project-card:nth-child(1) { --card-rotation: 1deg; }
+        .project-card:nth-child(2) { --card-rotation: -0.5deg; }
+        .project-card:nth-child(3) { --card-rotation: 0.8deg; }
+
+
+        /* 4b. Add parallax movement to project cards */
+        .project-card {
+            transform: 
+                /* UPDATED: Parallax cut by 75% */
+                translate(calc(var(--mouse-x, 0) * 0.002px), calc(var(--mouse-y, 0) * 0.002px))
+                rotate(var(--card-rotation));
+            /* transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); */ /* REPLACED */
+        }
+        
+        /* 4c. Combine hover with parallax - UPDATED Part 4.1 */
+        .project-card:hover {
+            /* transform: scale(1.03) rotate(1deg) translate(calc(var(--mouse-x, 0) * 0.005px), calc(var(--mouse-y, 0) * 0.005px)); */ /* REPLACED */
+            transform: 
+                rotate(var(--card-rotation, 0deg))
+                scale(1.03)
+                translateY(-8px)
+                /* rotate(calc(var(--card-rotation, 0deg) * 1.5)) */ /* Simplified for stability */
+                /* UPDATED: Parallax cut by 75% */
+                translate(calc(var(--mouse-x, 0) * 0.002px), calc(var(--mouse-y, 0) * 0.002px));
+            z-index: 5;
+            box-shadow: var(--shadow-elevated); /* NEW shadow */
+        }
+        
+        /* NEW: Part 3.4 - Polaroid Film Look */
+        .project-card .paper {
+            /* UPDATED: Removed washi tape, so enhance shadow */
+            border: 12px solid #f5f5f5;
+            border-bottom: 48px solid #f5f5f5;
+            box-shadow: 
+                0 4px 12px rgba(0,0,0,0.15), /* Enhanced shadow */
+                inset 0 0 0 1px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        /* NEW: Dark Mode Polaroid Paper */
+        .dark .project-card .paper {
+            border-color: #292524; /* stone-800 */
+            background: #292524;
+        }
+        
+        .project-card .project-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            /* Base film look */
+            /* UPDATED: Stronger filter */
+            filter: 
+                sepia(0.2)
+                contrast(0.9)
+                saturate(1.0);
+            transition: filter 0.5s ease, transform 0.5s ease;
+        }
+        /* NEW: Dark Mode Polaroid Image */
+        .dark .project-card .project-image {
+            filter: 
+                sepia(0.2)
+                contrast(0.9)
+                saturate(1.0)
+                brightness(0.8); /* Darker, as if in shadow */
+        }
+
+        .project-card:hover .project-image {
+            filter: none;
+            /* transform: scale(1.01); */ /* Removed, redundant with card scale */
+        }
+        
+        /* NEW: Part 3.4 - Polaroid Caption */
+        .project-card .paper::after {
+            content: attr(data-caption);
+            position: absolute;
+            bottom: -36px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: 'Kalam', cursive;
+            font-size: 0.9rem;
+            color: #57534e;
+            /* NEW: Ink bleed shadow */
+            text-shadow: 0 0 1px rgba(0,0,0,0.2);
+        }
+        /* NEW: Dark Mode Polaroid Caption */
+        .dark .project-card .paper::after {
+            color: #a8a29e;
+        }
+        
+
+        /* 5. The "Paper" (for About Me & Modal) - UPDATED Part 1.1 & 3.1 */
+        .paper {
+            /* background-color: white; */
+            /* box-shadow: 0 10px 20px rgba(0,0,0,0.08); */
+            background-color: #fcfcfc; /* Slightly off-white */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.05'/%3E%3C/svg%3E");
+            background-blend-mode: multiply;
+            box-shadow: var(--shadow-elevated); /* NEW shadow */
+            border-radius: 3px;
+        }
+        /* NEW: Dark Mode Paper */
+        .dark .paper {
+            /* UPDATED: Better contrast */
+            background-color: #44403c; /* stone-700 */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.1'/%3E%3C/svg%3E");
+        }
+
+        /* 5b. Add parallax to "About Me" paper */
+        #about .paper {
+            /* UPDATED: Parallax cut by 75% */
+            transform: rotate(-1deg) translate(calc(var(--mouse-x, 0) * 0.003px), calc(var(--mouse-y, 0) * 0.003px));
+            transition: transform 0.1s linear;
+        }
+
+        /* 6. Ambient "Flutter" Animation */
+        @keyframes flutter {
+            0% { transform: rotate(2deg); }
+            33% { transform: rotate(1.5deg); }
+            66% { transform: rotate(2.5deg); }
+            100% { transform: rotate(2deg); }
+        }
+
+        /* 7. Case Study Modal - UPDATED Part 3.1 */
+        .modal-overlay { /* NEW class for overlay */
+          background: linear-gradient(
+            135deg,
+            rgba(41,37,36,0.85) 0%,
+            rgba(28,25,23,0.90) 100%
+          );
+          backdrop-filter: blur(8px) saturate(0.8);
+          -webkit-backdrop-filter: blur(8px) saturate(0.8);
+        }
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-content {
+            /* transform: scale(0.95); */ /* REPLACED */
+            transform: translateY(40px) scale(0.95);
+            opacity: 0;
+            /* transition: all 0.3s ease-out; */ /* REPLACED */
+            transition: 
+                transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.3s ease;
+            box-shadow: var(--shadow-dramatic); /* NEW shadow */
+        }
+        /* NEW: Dark Mode Modal */
+        .dark .modal-content {
+             /* UPDATED: Better contrast */
+             background-color: #44403c; /* stone-700 */
+             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.1'/%3E%3C/svg%3E");
+        }
+        
+        /* .modal.is-open .modal-content { */ /* REPLACED */
+        .modal.is-open .modal-content {
+            /* transform: scale(1); */ /* REPLACED */
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        
+        /* NEW: Part 4.4 - Modal Stagger Animation */
+        .modal-content [data-animate] {
+            opacity: 0;
+            /* UPDATED: Added translateX */
+            transform: translateY(20px) translateX(-10px);
+            transition: 
+                opacity 0.4s ease,
+                transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* 8. Cinematic Scroll Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            /* Performance boost */
+            will-change: opacity, transform;
+        }
+        .fade-in-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 9. Interactive Background Layers */
+        #bg-layers {
+            position: fixed;
+            inset: 0;
+            z-index: -10; /* Behind all content */
+            overflow: hidden; /* Hide overflowing elements */
+            pointer-events: none; /* Let clicks pass through */
+        }
+
+        /* UPDATED Part 1.2: Warm Wood Desk */
+        #bg-texture {
+            background: 
+                /* Wood grain lines */
+                repeating-linear-gradient(
+                  90deg,
+                  transparent,
+                  transparent 2px,
+                  rgba(101,67,33,0.03) 2px,
+                  rgba(101,67,33,0.03) 3px,
+                  transparent 3px,
+                  transparent 50px
+                ),
+                /* Wood knots (random circular gradients) */
+                radial-gradient(ellipse at 15% 30%, rgba(80,50,20,0.08) 0%, transparent 3%),
+                radial-gradient(ellipse at 75% 60%, rgba(80,50,20,0.06) 0%, transparent 4%),
+                /* Base wood color with gradient */
+                linear-gradient(180deg, #8b7355 0%, #a0826d 100%);
+              
+            background-blend-mode: multiply, overlay, overlay, normal;
+            filter: contrast(1.02) brightness(0.98);
+            position: absolute;
+            inset: 0;
+            /* Parallax: Layer 3 (Deepest) */
+            /* UPDATED: Parallax cut by 75% */
+            transform: translate(calc(var(--mouse-x, 0) * 0.002px), calc(var(--mouse-y, 0) * 0.002px));
+            transition: transform 0.1s linear;
+        }
+        /* NEW: Dark Mode Desk Texture */
+        .dark #bg-texture {
+            background: 
+                /* Wood grain lines */
+                repeating-linear-gradient(
+                  90deg,
+                  transparent,
+                  transparent 2px,
+                  rgba(255,255,255,0.01) 2px,
+                  rgba(255,255,255,0.01) 3px,
+                  transparent 3px,
+                  transparent 50px
+                ),
+                /* Wood knots (random circular gradients) */
+                radial-gradient(ellipse at 15% 30%, rgba(255,255,255,0.02) 0%, transparent 3%),
+                radial-gradient(ellipse at 75% 60%, rgba(255,255,255,0.01) 0%, transparent 4%),
+                /* Base wood color with gradient */
+                linear-gradient(180deg, #3a2b1a 0%, #2a1b0a 100%);
+            filter: contrast(1.02) brightness(0.8);
+        }
+
+        /* 10. Background "Scattered Items" */
+        .bg-item {
+            position: absolute;
+            will-change: transform;
+            transition: transform 0.1s linear;
+        }
+        
+        /* UPDATED Part 1.3: Enhanced Coffee Ring */
+        #coffee-ring {
+            top: 20%;
+            left: 15%;
+            width: 100px;
+            opacity: 0.6; /* Made slightly more visible */
+            /* Parallax: Moves a bit. Scroll: Rotates. */
+            /* UPDATED: Parallax cut by 75% */
+            transform: 
+                translate(calc(var(--mouse-x, 0) * 0.005px), calc(var(--mouse-y, 0) * 0.005px))
+                rotate(calc(var(--scroll-y, 0) * 0.05deg));
+        }
+        /* NEW: Dark Mode Coffee Ring */
+        .dark #coffee-ring {
+            opacity: 0.4;
+        }
+        .dark #coffee-ring path, .dark #coffee-ring circle {
+            stroke: rgba(200, 180, 170, 0.2);
+            fill: rgba(200, 180, 170, 0.03);
+        }
+        
+        /* REMOVED: #paperclip */
+        #paperclip { display: none; }
+
+        /* Layer 5 Items (Tools) */
+        #sketchbook {
+            bottom: 5%;
+            left: 10%;
+            width: 150px;
+            opacity: 0.4;
+            /* Parallax: Layer 5 */
+            /* UPDATED: Parallax cut by 75% */
+            transform: 
+                translate(calc(var(--mouse-x, 0) * 0.006px), calc(var(--mouse-y, 0) * 0.006px))
+                rotate(calc(var(--scroll-y, 0) * 0.02deg));
+        }
+        /* NEW: Dark Mode Sketchbook */
+        .dark #sketchbook rect:first-child {
+            fill: #44403c;
+            stroke: #292524;
+        }
+        .dark #sketchbook rect:nth-child(2) {
+            stroke: #1c1917;
+        }
+        .dark #sketchbook polyline {
+            stroke: #78716c;
+        }
+        .dark #sketchbook path {
+            stroke: #292524;
+        }
+
+        #pen {
+            bottom: 15%;
+            left: 18%;
+            width: 120px;
+            opacity: 0.5;
+            /* Parallax: Layer 6 (On top of sketchbook) */
+            /* UPDATED: Parallax cut by 75% */
+            transform: 
+                translate(calc(var(--mouse-x, 0) * 0.007px), calc(var(--mouse-y, 0) * 0.007px))
+                rotate(calc(var(--scroll-y, 0) * -0.01deg));
+        }
+        /* NEW: Dark Mode Pen */
+        .dark #pen rect {
+            fill: #1c1917;
+        }
+        .dark #pen path {
+            fill: #78716c;
+        }
+
+        /* Layer 2 Items (Ambient) */
+        #plant-shadow {
+            top: -10%;
+            right: -5%;
+            width: 300px;
+            opacity: 0.15;
+            /* Parallax: Layer 2 (Deep Background) */
+            /* UPDATED: Parallax cut by 75% */
+            transform: 
+                translate(calc(var(--mouse-x, 0) * 0.003px), calc(var(--mouse-y, 0) * 0.003px))
+                rotate(-30deg);
+            /* UPDATED: Slower sway */
+            animation: sway 20s infinite ease-in-out;
+        }
+        /* NEW: Dark Mode Plant Shadow */
+        .dark #plant-shadow {
+            opacity: 0.05;
+        }
+
+        /* Layer 7 Items (Floating) */
+        /* REMOVED: .bg-sticky-note */
+        .bg-sticky-note { display: none; }
+
+        /* Ambient Animation (Steam) */
+        #coffee-steam {
+            position: absolute;
+            top: 18%; /* Positioned over the coffee ring */
+            left: 16%;
+            width: 50px;
+            height: 50px;
+            pointer-events: none;
+            /* Parallax: Moves with coffee ring */
+            /* UPDATED: Parallax cut by 75% */
+            transform: 
+                translate(calc(var(--mouse-x, 0) * 0.005px), calc(var(--mouse-y, 0) * 0.005px));
+        }
+        /* NEW: Dark Mode Steam */
+        .dark #coffee-steam path {
+            stroke: #d4d4d4;
+            stroke-width: 1.5;
+        }
+
+        #coffee-steam path {
+            stroke: #a8a29e; /* stone-400 */
+            stroke-width: 2;
+            stroke-linecap: round;
+            fill: none;
+            /* UPDATED: Staggered duration */
+            animation: steam-rise 4s infinite ease-out;
+        }
+        #coffee-steam path:nth-child(2) {
+            /* UPDATED: Staggered duration/delay */
+            animation-delay: 1.5s;
+            animation-duration: 4.5s;
+        }
+        #coffee-steam path:nth-child(3) {
+            /* UPDATED: Staggered duration/delay */
+            animation-delay: 2.3s;
+            animation-duration: 3.8s;
+        }
+
+        @keyframes steam-rise {
+            0% {
+                opacity: 0;
+                stroke-dasharray: 0, 50;
+                transform: translateY(0) scale(0.8);
+            }
+            50% {
+                opacity: 0.6;
+                stroke-dasharray: 25, 25;
+            }
+            100% {
+                opacity: 0;
+                stroke-dasharray: 0, 50;
+                transform: translateY(-30px) scale(1);
+            }
+        }
+
+
+        /* 11. Background "Dust Motes" */
+        .dust-mote {
+            position: absolute;
+            background-color: rgba(168, 162, 158, 0.3); /* stone-500 */
+            border-radius: 50%;
+            filter: blur(3px);
+            will-change: transform, opacity;
+            animation: float 20s infinite ease-in-out;
+            /* Parallax: Layer 1 (Deepest) */
+            /* UPDATED: Removed mouse parallax */
+            transform: translate(0,0);
+        }
+        /* NEW: Dark Mode Dust */
+        .dark .dust-mote {
+            background-color: rgba(200, 200, 200, 0.2);
+            filter: blur(2px);
+        }
+
+        /* UPDATED: Slower durations */
+        .dust-mote:nth-child(1) { width: 10px; height: 10px; top: 15%; left: 10%; animation-delay: 0s; animation-duration: 45s; }
+        .dust-mote:nth-child(2) { width: 5px; height: 5px; top: 30%; left: 30%; animation-delay: -3s; animation-duration: 40s; }
+        .dust-mote:nth-child(3) { width: 8px; height: 8px; top: 50%; left: 80%; animation-delay: -8s; animation-duration: 38s; }
+        .dust-mote:nth-child(4) { width: 12px; height: 12px; top: 70%; left: 50%; animation-delay: -12s; animation-duration: 42s; }
+        .dust-mote:nth-child(5) { width: 6px; height: 6px; top: 85%; left: 20%; animation-delay: -15s; animation-duration: 48s; }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
+            50% { transform: translateY(-20px) translateX(15px) scale(1.1); opacity: 0.5; }
+            100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
+        }
+
+        /* Ambient Animation (Sway) */
+        @keyframes sway {
+            /* UPDATED: Slower, more subtle sway */
+            0% { transform: rotate(-30.5deg) translate(calc(var(--mouse-x, 0) * 0.003px), calc(var(--mouse-y, 0) * 0.003px)); }
+            50% { transform: rotate(-29.5deg) translate(calc(var(--mouse-x, 0) * 0.003px), calc(var(--mouse-y, 0) * 0.003px)); }
+            100% { transform: rotate(-30.5deg) translate(calc(var(--mouse-x, 0) * 0.003px), calc(var(--mouse-y, 0) * 0.003px)); }
+        }
+
+        /* 12. Click Ripple Effect */
+        #click-ripple-container {
+            position: fixed;
+            inset: 0;
+            z-index: 9999; /* On top of everything */
+            pointer-events: none; /* Let clicks pass through */
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(168, 162, 158, 0.5); /* stone-500 */
+            transform: scale(0);
+            animation: ripple-effect 0.6s ease-out;
+        }
+        /* NEW: Dark Mode Ripple */
+        .dark .ripple {
+            background-color: rgba(231, 229, 228, 0.3); /* stone-200 */
+        }
+
+        @keyframes ripple-effect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* 13. Smartphone (Layer 5) */
+        /* REMOVED: Smartphone */
+        #smartphone { display: none; }
+        
+        /* 14. Gleaming Push Pin - UPDATED Part 3.1 */
+        /* REMOVED: Push Pin */
+        #push-pin { display: none; }
+        
+        /* NEW: Binder Clip (Replaces Push Pin) */
+        #binder-clip {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 60px;
+            z-index: 10;
+            transform: rotate(-5deg);
+            filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+        #binder-clip:hover {
+            transform: rotate(-8deg) scale(1.05);
+        }
+        
+        /* 15. NEW: Part 1.3 Imperfections */
+        #ink-splotch {
+            top: 15%;
+            left: 60%;
+            width: 40px;
+            /* UPDATED: More subtle */
+            opacity: 0.1;
+            /* UPDATED: Parallax cut */
+            transform: rotate(-15deg) translate(calc(var(--mouse-x, 0) * 0.004px), calc(var(--mouse-y, 0) * 0.004px));
+        }
+        /* NEW: Dark Mode Imperfections */
+        .dark #ink-splotch {
+            opacity: 0.2;
+        }
+        .dark #ink-splotch path, .dark #ink-splotch circle {
+            fill: #000;
+        }
+        
+        #eraser-shavings {
+            bottom: 30%;
+            right: 15%;
+            width: 50px;
+            /* UPDATED: More subtle */
+            opacity: 0.15;
+            /* UPDATED: Parallax cut */
+            transform: translate(calc(var(--mouse-x, 0) * 0.007px), calc(var(--mouse-y, 0) * 0.007px));
+        }
+        .dark #eraser-shavings {
+            opacity: 0.3;
+        }
+        .dark #eraser-shavings ellipse {
+            fill: #78716c;
+        }
+
+        #pencil-scribble {
+            top: 40%;
+            left: 10%;
+            width: 80px;
+            /* UPDATED: More subtle */
+            opacity: 0.05;
+            /* UPDATED: Parallax cut */
+            transform: translate(calc(var(--mouse-x, 0) * 0.004px), calc(var(--mouse-y, 0) * 0.004px));
+        }
+        .dark #pencil-scribble path {
+            stroke: #a8a29e;
+            /* UPDATED: More subtle */
+            opacity: 0.1;
+        }
+
+        /* NEW: Part 3.2 Dynamic Lighting Effects */
+        /* Replaces #cursor-light div */
+        body::before {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          pointer-events: none;
+          z-index: 999;
+          
+          /* Warm ambient glow from cursor */
+          background: radial-gradient(
+            circle 600px at var(--mouse-x-pct, 50%) var(--mouse-y-pct, 50%),
+            rgba(255,247,237,0.06) 0%,
+            rgba(255,237,213,0.03) 40%,
+            transparent 70%
+          );
+          
+          mix-blend-mode: screen;
+          transition: opacity 0.3s ease;
+        }
+        /* NEW: Dark Mode Cursor Light */
+        .dark body::before {
+            /* Tone down the warm light */
+            background: radial-gradient(
+                circle 600px at var(--mouse-x-pct, 50%) var(--mouse-y-pct, 50%),
+                rgba(255,247,237,0.03) 0%,
+                rgba(255,237,213,0.01) 40%,
+                transparent 70%
+            );
+        }
+        
+        body::after {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          pointer-events: none;
+          z-index: 998;
+          
+          /* Cool monitor glow variation */
+          background: radial-gradient(
+            circle 400px at var(--mouse-x-pct, 50%) var(--mouse-y-pct, 50%),
+            rgba(191,219,254,0.04) 0%,
+            rgba(147,197,253,0.02) 50%,
+            transparent 100%
+          );
+          
+          mix-blend-mode: screen;
+          animation: ambient-pulse 8s ease-in-out infinite;
+        }
+        /* NEW: Dark Mode Cursor Light */
+        .dark body::after {
+            /* Enhance the cool "monitor" glow */
+            background: radial-gradient(
+                circle 400px at var(--mouse-x-pct, 50%) var(--mouse-y-pct, 50%),
+                rgba(191,219,254,0.08) 0%,
+                rgba(147,197,253,0.05) 50%,
+                transparent 100%
+            );
+        }
+
+        @keyframes ambient-pulse {
+          0%, 100% { opacity: 0.6; }
+          50% { opacity: 1; }
+        }
+        
+        /* NEW: Part 3.4 - Vignette & Atmospheric Depth */
+        #vignette-overlay {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            box-shadow: inset 0 0 200px rgba(0,0,0,0.08);
+            background: linear-gradient(
+                180deg,
+                rgba(255,255,255,0.02) 0%,
+                transparent 30%,
+                transparent 70%,
+                rgba(0,0,0,0.03) 100%
+            );
+        }
+        /* NEW: Dark Mode "Desk Lamp" Vignette */
+        .dark #vignette-overlay {
+            background: radial-gradient(
+                circle 1000px at 50% 0%,
+                transparent 0%,
+                rgba(0,0,0,0.4) 50%,
+                rgba(0,0,0,0.8) 100%
+            );
+            box-shadow: none;
+        }
+
+        /* UPDATED: Part 2.1 - Signature Header */
+        .header-name h2 {
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+            transition: all 0.3s ease;
+        }
+        .header-name h2:hover {
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+            transform: scale(1.02);
+        }
+        
+        /* UPDATED: Part 2.1 - Signature Header */
+        .header-name h2 {
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+        }
+        
+        /* REMOVED: .signature-header and @keyframes sign */
+        
+        /* NEW: Part 2.2 - Pencil Underline on Nav Hover */
+        .nav-link {
+          position: relative;
+          text-decoration: none;
+          color: #44403c;
+          transition: color 0.3s ease;
+        }
+        /* NEW: Dark Mode Nav */
+        .dark .nav-link {
+            color: #a8a29e; /* stone-400 */
+        }
+        .dark .nav-link:hover {
+            color: #5eead4; /* cyan-400 */
+        }
+        
+        .nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 0%;
+          height: 2px;
+          background-image: repeating-linear-gradient(
+            90deg,
+            #44403c 0px,
+            #44403c 3px,
+            transparent 3px,
+            transparent 6px
+          ); /* Dashed pencil line */
+          transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        /* NEW: Dark Mode Nav Underline */
+        .dark .nav-link::after {
+             background-image: repeating-linear-gradient(
+                90deg,
+                #a8a29e 0px,
+                #a8a29e 3px,
+                transparent 3px,
+                transparent 6px
+              );
+        }
+        
+        .nav-link:hover::after {
+          width: 100%;
+        }
+        .nav-link:hover {
+          color: #1c1917;
+        }
+        
+        /* NEW: Part 2.2 - CV Button Jiggle */
+        .cv-button {
+          transition: all 0.3s ease;
+        }
+        /* NEW: Dark Mode CV Button */
+        .dark .cv-button {
+            background: #44403c; /* stone-600 */
+            color: #e7e5e4; /* stone-200 */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        /* REMOVED: Hover jiggle */
+        /* .cv-button:hover {
+          animation: jiggle 0.4s ease-in-out;
+        } */
+        
+        /* NEW: Click jiggle animation */
+        .cv-button.jiggle-click {
+          animation: jiggle-click 0.4s ease-in-out;
+        }
+        
+        @keyframes jiggle {
+          0%, 100% { transform: rotate(-2deg); }
+          25% { transform: rotate(-5deg) scale(1.02); }
+          50% { transform: rotate(1deg) scale(1.05); }
+          75% { transform: rotate(-4deg) scale(1.02); }
+        }
+        
+        /* NEW: Click jiggle keyframes */
+        @keyframes jiggle-click {
+          0%, 100% { transform: rotate(-2deg); }
+          25% { transform: rotate(-5deg) scale(1.02); }
+          50% { transform: rotate(1deg) scale(1.05); }
+          75% { transform: rotate(-4deg) scale(1.02); }
+        }
+        
+        .cv-button:active {
+          transform: scale(0.98) translateY(2px) rotate(-2deg);
+          box-shadow: 
+            0 1px 3px rgba(0,0,0,0.2),
+            inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* NEW: Part 2.3 - Dymo Label Toolkit Tags */
+        .toolkit-tag {
+          font-family: 'IBM Plex Mono', 'Courier New', monospace;
+          font-size: 0.7rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          padding: 4px 10px 4px 14px;
+          background: linear-gradient(180deg, #e8e8e8 0%, #d5d5d5 100%);
+          color: #2c2c2c;
+          border: 1px solid #c0c0c0;
+          border-radius: 3px;
+          box-shadow: 
+            0 1px 2px rgba(0,0,0,0.1),
+            inset 0 1px 0 rgba(255,255,255,0.5);
+          position: relative;
+          /* NEW: Embossed text */
+          text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+        }
+        /* NEW: Dark Mode Toolkit Tag */
+        .dark .toolkit-tag {
+            background: #57534e; /* stone-500 */
+            color: #e7e5e4; /* stone-200 */
+            border-color: #78716c; /* stone-400 */
+            /* NEW: Embossed text */
+            text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
+        }
+        .dark .toolkit-tag::before {
+            background: #a8a29e;
+        }
+        
+        /* NEW: Part 2.3 - "Too Much Coffee" Highlight */
+        .tag-coffee {
+          background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%);
+          color: #78350f;
+          border-color: #f59e0b;
+          box-shadow: 
+            0 2px 4px rgba(245,158,11,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.6);
+          animation: subtle-pulse 3s ease-in-out infinite;
+        }
+        /* NEW: Dark Mode Coffee Tag */
+        .dark .tag-coffee {
+            background: #92400e; /* amber-800 */
+            color: #fef3c7; /* amber-100 */
+            border-color: #f59e0b; /* amber-500 */
+        }
+        
+        .tag-coffee::after {
+          content: '☕';
+          margin-left: 4px;
+          font-size: 0.9em;
+        }
+        @keyframes subtle-pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.03); }
+        }
+        
+        /* NEW: Part 2.4 - Prose & Reading Experience */
+        .prose-manifesto p {
+          line-height: 1.8;
+          color: #44403c;
+          font-size: 1.05rem;
+          margin-bottom: 1.5em;
+        }
+        /* NEW: Added base UL/LI styles */
+        .prose-manifesto ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .prose-manifesto ul li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 12px;
+        }
+        /* NEW: Dark Mode Prose */
+        .dark .prose-manifesto p {
+            color: #d6d3d1; /* stone-300 */
+        }
+        
+        .prose-manifesto p:first-of-type {
+          font-size: 1.15rem;
+          line-height: 1.9;
+          color: #292524;
+        }
+        /* NEW: Dark Mode Prose */
+        .dark .prose-manifesto p:first-of-type {
+            color: #f5f5f4; /* stone-100 */
+        }
+        
+        /* Drop cap for ultimate editorial feel */
+        .prose-manifesto p:first-of-type::first-letter {
+          font-size: 3.5em;
+          line-height: 0.8;
+          float: left;
+          margin: 0.1em 0.1em 0 0;
+          font-family: 'Playfair Display', serif;
+          /* UPDATED: Gold drop cap */
+          color: #b45309; /* amber-700 */
+        }
+        /* NEW: Dark Mode Drop Cap */
+        .dark .prose-manifesto p:first-of-type::first-letter {
+            color: #f59e0b; /* amber-500 */
+        }
+        
+        /* NEW: Part 2.4 - Handwritten Section Headers */
+        .about-section-header {
+          font-family: 'Kalam', 'Caveat', cursive;
+          font-size: 1.8rem;
+          font-weight: 700;
+          color: #292524;
+          margin-bottom: 1rem;
+          position: relative;
+          display: inline-block;
+          transform: rotate(-1deg); /* Slight tilt */
+        }
+        /* NEW: Dark Mode Section Header */
+        .dark .about-section-header {
+            color: #f5f5f4; /* stone-100 */
+        }
+        
+        .about-section-header::before {
+          content: '✍️';
+          margin-right: 8px;
+          font-size: 0.8em;
+          opacity: 0.6;
+        }
+        
+        /* NEW: Part 2.5 - Handwritten Close Button */
+        .modal-close-button {
+          font-family: 'Kalam', cursive;
+          font-size: 2.5rem;
+          font-weight: 400;
+          color: #57534e;
+          background: none;
+          border: none;
+          cursor: pointer;
+          transform: rotate(5deg);
+          transition: all 0.3s ease;
+          line-height: 1;
+          padding: 0;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        /* NEW: Dark Mode Close Button */
+        .dark .modal-close-button {
+            color: #a8a29e; /* stone-400 */
+        }
+        .dark .modal-close-button:hover {
+            color: #f5f5f4; /* stone-100 */
+        }
+        
+        .modal-close-button:hover {
+          transform: rotate(15deg) scale(1.1);
+          color: #1c1917;
+        }
+        .modal-close-button:active {
+          transform: rotate(5deg) scale(0.95);
+        }
+        
+        /* NEW: Part 6.3 - Accessibility (Skip Link) */
+        .skip-to-content {
+          position: absolute;
+          top: -100px; /* Hidden by default */
+          left: 1rem;
+          background: #1e293b;
+          color: white;
+          padding: 8px 16px;
+          text-decoration: none;
+          z-index: 10000;
+          transition: top 0.3s;
+          border-radius: 0 0 8px 8px;
+          font-weight: 600;
+        }
+        .skip-to-content:focus {
+          top: 0;
+        }
+        
+        /* NEW: Quirky Electrical Switch */
+        .light-switch {
+          width: 60px;
+          height: 30px;
+          background-color: #44403c; /* stone-600 */
+          border: 2px solid #1c1917; /* stone-900 */
+          border-radius: 4px;
+          padding: 4px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+          box-shadow: 0 2px 0 #1c1917, 0 3px 5px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.1);
+        }
+        .dark .light-switch {
+          background-color: #e5e5e5; /* neutral-200 */
+          border-color: #a3a3a3; /* neutral-400 */
+          box-shadow: 0 2px 0 #a3a3a3, 0 3px 5px rgba(0,0,0,0.1), inset 0 1px 1px rgba(0,0,0,0.1);
+        }
+        .lever {
+          width: 20px;
+          height: 20px;
+          background: linear-gradient(135deg, #f5f5f4 0%, #d6d3d1 100%); /* stone-100 to stone-300 */
+          border: 1px solid #a8a29e; /* stone-400 */
+          box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+          transform: translateX(0);
+          transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .dark .lever {
+          transform: translateX(30px); /* (60 - 8 - 20) = 32px. 30px looks better */
+          background: linear-gradient(135deg, #78716c 0%, #57534e 100%); /* stone-400 to stone-500 */
+            border-color: #44403c; /* stone-600 */
+        }
+        
+        /* * --- IMPROVEMENT: "File Cabinet" Tabs ---
+         * This section has been updated to be more playful.
+        */
+        .file-tabs {
+            display: flex;
+            margin: -32px -48px 32px -48px; /* Pull tabs outside paper padding */
+            padding-left: 24px;
+            border-bottom: 2px solid #e7e5e4; /* stone-200 */
+        }
+        .dark .file-tabs {
+            border-bottom-color: #44403c; /* stone-600 */
+        }
+        .tab-button {
+            padding: 8px 16px;
+            font-family: 'Kalam', cursive;
+            font-size: 1.25rem;
+            color: #78716c; /* stone-400 */
+            background: #f5f5f4; /* stone-100 */
+            border: 2px solid #e7e5e4; /* stone-200 */
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            margin-right: 8px;
+            margin-bottom: -2px; /* Sits on top of the border */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform: translateY(4px) rotate(-1deg);
+        }
+        .dark .tab-button {
+            color: #a8a29e; /* stone-400 */
+            background: #44403c; /* stone-600 */
+            border-color: #57534e; /* stone-500 */
+        }
+        .tab-button.active {
+            background: #fcfcfc; /* paper bg */
+            color: #1c1917; /* stone-900 */
+            border-color: #e7e5e4; /* stone-200 */
+            transform: translateY(0) rotate(0);
+            z-index: 2;
+        }
+        .dark .tab-button.active {
+            /* UPDATED: Better contrast */
+            background: #44403c; /* stone-700 */
+            color: #f5f5f4; /* stone-100 */
+            border-color: #57534e; /* stone-600 */
+        }
+        .tab-button:hover:not(.active) {
+            background: #e7e5e4; /* stone-200 */
+            transform: translateY(2px) rotate(-0.5deg);
+        }
+        .dark .tab-button:hover:not(.active) {
+            background: #57534e; /* stone-500 */
+        }
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+            /* UPDATED: New animation (see @keyframes fadeIn) */
+            animation: fadeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        /* UPDATED: New quirky animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-30px) rotate(-2deg); }
+            to { opacity: 1; transform: translateX(0) rotate(0); }
+        }
+        
+        /* UPDATED: Job title highlighter */
+        .tab-panel li h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #292524;
+            margin-bottom: 4px;
+            /* NEW: Highlighter effect */
+            display: inline;
+            background: linear-gradient(to top, transparent 20%, #fef08a 20%, #fef08a 80%, transparent 80%);
+            padding: 0 4px;
+            margin-left: -4px;
+        }
+        .dark .tab-panel li h4 {
+            color: #f5f5f4;
+            /* NEW: Dark mode highlighter - Muted Amber (Point #30) */
+            background: linear-gradient(to top, transparent 20%, #b45309 20%, #b45309 80%, transparent 80%);
+        }
+        
+        /* UPDATED: Dymo-label style for company/role */
+        .tab-panel .company-role {
+            font-family: 'IBM Plex Mono', 'Courier New', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 4px 10px 4px 14px;
+            background: linear-gradient(180deg, #e8e8e8 0%, #d5d5d5 100%);
+            color: #2c2c2c;
+            border: 1px solid #c0c0c0;
+            border-radius: 3px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5);
+            text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+        .dark .tab-panel .company-role {
+            background: #57534e;
+            color: #e7e5e4;
+            border-color: #78716c;
+            text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
+        }
+        
+        .tab-panel .details {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            list-style: none; /* Ensure prose styles don't override */
+            padding-left: 0; /* Ensure prose styles don't override */
+        }
+        .tab-panel .details li {
+             padding-left: 24px;
+             margin-bottom: 8px;
+        }
+        
+        /* UPDATED: Experience bullet points (back to checkmark) (Point #30) */
+        .tab-panel .details li::before {
+            content: '✓'; /* Replaced » */
+            color: #15803d; /* green-700 */
+            font-weight: 700;
+            position: absolute; /* Added for alignment */
+            left: 0;
+            top: 2px;
+            font-size: 1rem; /* Adjust size */
+            opacity: 1; /* Adjust opacity */
+        }
+        .dark .tab-panel .details li::before {
+             color: #4ade80; /* green-400 */
+        }
+        
+        /* UPDATED: Project icon (Point #28) */
+        .tab-panel .project-list li::before {
+            content: '💡'; /* Replaced 📎 */
+            position: absolute; /* Added for alignment */
+            left: 0;
+            font-size: 1.2rem;
+            opacity: 0.7;
+            top: 2px;
+        }
+        .tab-panel .education-list li::before {
+            content: '🎓';
+            position: absolute; /* Added for alignment */
+            left: 0;
+            top: 0;
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        /* UPDATED: Certs icon (Point #29) */
+        .tab-panel .certs-list li::before {
+            content: '🏅'; /* Replaced 📜 */
+            position: absolute; /* Added for alignment */
+            left: 0;
+            font-size: 1.2rem;
+            opacity: 0.7;
+            top: 2px;
+        }
+        /* --- END of "File Cabinet" Improvements --- */
+        
+        
+        /* NEW: Preloader */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            background: #f5f3f0; /* Match light paper */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+        .dark .preloader {
+            background: #2a1b0a; /* Match dark desk */
+        }
+        .preloader p {
+            font-size: 2rem;
+            color: #57534e;
+            animation: loading-pulse 1.5s infinite ease-in-out;
+        }
+        .dark .preloader p {
+            color: #a8a29e;
+        }
+        @keyframes loading-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        /* NEW: Modal Open Body State */
+        #main-content {
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+        #main-content.modal-open {
+            transform: scale(0.98);
+            filter: blur(2px);
+        }
+        
+        /* NEW: Header Grounding */
+        nav {
+            position: relative;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e7e5e4; /* stone-200 */
+        }
+        .dark nav {
+            border-bottom-color: #44403c; /* stone-600 */
+        }
+        nav::after {
+            content: '01';
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            color: #a8a29e; /* stone-400 */
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+        }
+        
+        /* NEW: Final To-Do Note */
+        .bg-sticky-note-todo {
+            position: absolute;
+            bottom: 25%;
+            left: 8%;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #e0f2ff 0%, #bae6fd 100%); /* Blue */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            /* UPDATED: Parallax cut */
+            transform: 
+                translate(calc(var(--mouse-x, 0) * 0.008px), calc(var(--mouse-y, 0) * 0.008px))
+                rotate(-5deg);
+            padding: 12px;
+            padding-left: 20px;
+        }
+        .dark .bg-sticky-note-todo {
+             background: linear-gradient(135deg, #075985 0%, #0c4a6e 100%);
+             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .todo-list {
+            font-family: 'Kalam', cursive;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: #1e3a8a; /* blue-800 */
+        }
+        .dark .todo-list {
+            color: #e0f2ff; /* blue-100 */
+        }
+        .todo-list li:first-child {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+    </style>
+
+</head>
+<body class="font-body bg-stone-100 text-stone-800 antialiased cursor-default overflow-x-hidden dark:bg-stone-900 dark:text-stone-300">
+    
+    <!-- NEW: Part 6.1 - Preloader -->
+    <div id="preloader" class="preloader">
+        <p class="font-hand">Sketching...</p>
+    </div>
+    
+    <!-- NEW: Part 6.3 - Accessibility (Skip Link) -->
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+    <!-- 
+      Interactive Background Layers
+      These are behind the #app wrapper
+    -->
+    <div id="bg-layers">
+        <!-- Layer 1: The Desk Texture -->
+        <div id="bg-texture"></div>
+
+        <!-- Layer (overlay) for Cursor Light is gone, replaced by body::before::after -->
+        
+        <!-- NEW: Part 3.4 - Vignette -->
+        <div id="vignette-overlay"></div>
+
+        <!-- Layer 2: The "Creative Mess" -->
+        <!-- UPDATED Coffee Ring SVG (Part 1.3) -->
+        <svg id="coffee-ring" class="bg-item" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(111,78,55,0.3)" stroke-width="2"/>
+          <circle cx="52" cy="48" r="38" fill="none" stroke="rgba(111,78,55,0.15)" stroke-width="1.5"/>
+          <circle cx="50" cy="50" r="25" fill="rgba(111,78,55,0.05)"/>
+          <path d="M 50 85 Q 48 90, 50 95" stroke="rgba(111,78,55,0.2)" stroke-width="1.5" fill="none"/>
+        </svg>
+
+        <!-- Coffee Steam -->
+        <svg id="coffee-steam" viewBox="0 0 50 50">
+            <path d="M 15 40 Q 15 20 25 20 Q 35 20 35 40"></path>
+            <path d="M 10 40 Q 10 20 20 20 Q 30 20 30 40"></path>
+            <path d="M 20 40 Q 20 20 30 20 Q 40 20 40 40"></path>
+        </svg>
+
+        <!-- Smartphone (Layer 5) -->
+        <svg id="smartphone" class="bg-item" viewBox="0 0 100 200">
+            <rect x="5" y="5" width="90" height="190" fill="#333" rx="15"/>
+            <rect id="smartphone-screen" x="15" y="20" width="70" height="160" fill="#dbeafe" rx="5"/>
+        </svg>
+
+        <!-- Plant Shadow (Layer 2) -->
+        <svg id="plant-shadow" class="bg-item" viewBox="0 0 100 100">
+            <path d="M 50 100 V 50 C 20 80, 20 20, 50 50 C 80 80, 80 20, 50 50 M 50 50 C 30 30, 70 30, 50 50 M 50 50 C 40 20, 60 20, 50 50" 
+            fill="black" stroke="none"/>
+        </svg>
+
+        <!-- Sketchbook (Layer 5) -->
+        <svg id="sketchbook" class="bg-item" viewBox="0 0 100 150">
+            <rect x="5" y="5" width="90" height="140" fill="#F5F5DC" stroke="#333" stroke-width="1"/>
+            <rect x="5" y="5" width="90" height="140" fill="none" stroke="#222" stroke-width="2" rx="3"/>
+            <polyline points="10 15, 90 15, 10 25, 90 25, 10 35, 90 35" fill="none" stroke="#aaa" stroke-width="0.5"/>
+            <path d="M5,10 a 5 5 0 0 1 0,10 M5,20 a 5 5 0 0 1 0,10 M5,30 a 5 5 0 0 1 0,10 M5,40 a 5 5 0 0 1 0,10 M5,50 a 5 5 0 0 1 0,10 M5,60 a 5 5 0 0 1 0,10 M5,70 a 5 5 0 0 1 0,10 M5,80 a 5 5 0 0 1 0,10 M5,90 a 5 5 0 0 1 0,10 M5,100 a 5 5 0 0 1 0,10 M5,110 a 5 5 0 0 1 0,10 M5,120 a 5 5 0 0 1 0,10 M5,130 a 5 5 0 0 1 0,10" 
+            fill="none" stroke="#555" stroke-width="1.5"/>
+        </svg>
+
+        <!-- Pen (Layer 6) -->
+        <svg id="pen" class="bg-item" viewBox="0 0 100 20" transform="rotate(20)">
+            <rect x="0" y="5" width="90" height="10" fill="#444" rx="3"/>
+            <path d="M 90 5 L 100 10 L 90 15 Z" fill="#ccc"/>
+        </svg>
+
+        <!-- REMOVED: Floating Sticky Note (Layer 7) -->
+        <!-- <div class="bg-sticky-note bg-item"></div> -->
+
+
+        <!-- REMOVED: Paperclip SVG -->
+        <!-- <svg id="paperclip" ... </svg> -->
+
+        <!-- NEW: Part 1.3 Imperfections -->
+        <svg id="ink-splotch" class="bg-item" viewBox="0 0 50 50">
+          <path d="M 25 10 Q 20 15, 15 20 Q 12 25, 15 30 Q 20 35, 25 33 Q 30 36, 35 32 Q 38 27, 36 22 Q 33 15, 28 12 Z" 
+            fill="#1e293b"/>
+          <circle cx="38" cy="15" r="2" fill="#1e293b"/>
+          <circle cx="42" cy="20" r="1.5" fill="#1e293b"/>
+        </svg>
+        <svg id="eraser-shavings" class="bg-item" viewBox="0 0 60 20">
+          <ellipse cx="10" cy="10" rx="6" ry="2" fill="#f8f8f8" transform="rotate(15 10 10)"/>
+          <ellipse cx="25" cy="12" rx="7" ry="2.5" fill="#f5f5f5" transform="rotate(-10 25 12)"/>
+          <ellipse cx="42" cy="8" rx="5" ry="2" fill="#fafafa" transform="rotate(25 42 8)"/>
+          <ellipse cx="50" cy="13" rx="4" ry="1.5" fill="#f0f0f0" transform="rotate(-5 50 13)"/>
+        </svg>
+        <svg id="pencil-scribble" class="bg-item" viewBox="0 0 100 40">
+          <path d="M 5 20 Q 15 10, 30 15 T 60 20 T 90 18" stroke="#6b7280" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+          <path d="M 5 25 Q 20 15, 35 22 T 65 25 T 95 23" stroke="#6b7280" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+        </svg>
+
+        <!-- Layer 3: The "Atmosphere" -->
+        <div class="dust-mote"></div>
+        <div class="dust-mote"></div>
+        <div class="dust-mote"></div>
+        
+        <!-- NEW: Part 5.5 - Final To-Do Note (IMPLEMENTS Point #45) -->
+        <div class="bg-sticky-note-todo bg-item">
+            <ul class="todo-list">
+                <!-- UPDATED: Point #45 -->
+                <li class="line-through opacity-70">Launch portfolio</li>
+                <li>Water "Bread Pitt"</li>
+                <li>Find that Smiths record</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Container for click ripples -->
+    <div id="click-ripple-container"></div>
+
+
+    <!-- 
+      The "Digital Atelier" Wrapper
+      This is the main "desk" surface.
+    -->
+    <!-- NEW: Part 6.3 - Main Content Wrapper -->
+    <main id="main-content" class="max-w-7xl mx-auto p-4 sm:p-8 md:p-12">
+
+        <!-- 
+          Phase 1: Navigation
+          Feels like a sketchbook header.
+        -->
+        <nav class="flex flex-col sm:flex-row items-center justify-between mb-16 md:mb-24" aria-label="Primary navigation">
+            <!-- UPDATED: Part 2.1 - Replaced SVG with styled H2 -->
+            <div class="header-name mb-4 sm:mb-0">
+                <h2 class="font-hand text-5xl font-bold text-stone-800 dark:text-stone-100">
+                    Sumanth Udupi
+                </h2>
+            </div>
+            <div class="flex items-center space-x-6">
+                <!-- NEW: Part 2.2 - Pencil Underline -->
+                <!-- UPDATED: Point #4 (Nav link) -->
+                <a href="#professional-work" class="nav-link text-stone-600 dark:text-stone-400 dark:hover:text-cyan-400 transition-colors">Case Studies</a>
+                <a href="#about" class="nav-link text-stone-600 dark:text-stone-400 dark:hover:text-cyan-400 transition-colors">About</a>
+                <!-- The CV Download - NEW: Part 2.2 - Jiggle -->
+                <!-- UPDATED: Point #49 (CV Filename) -->
+                <a href="Sumanth-Udupi-Resume.pdf" download="Sumanth-Udupi-Resume.pdf" id="cv-button" class="cv-button font-hand bg-white py-2 px-4 rounded-md shadow-md transform -rotate-2 text-stone-700">
+                    Download CV (The Paperwork)
+                </a>
+                <!-- NEW: Electrical Switch -->
+                <button id="theme-toggle" class="light-switch" aria-label="Toggle light and dark mode">
+                    <div class="lever"></div>
+                </button>
+            </div>
+        </nav>
+
+        <!-- 
+          Phase 1: P1: The Opening Scene (Hero)
+          The "handwritten" welcome note.
+        -->
+        <section id="hero" class="mb-24 md:mb-32 fade-in-up">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                <!-- The Emotional Beat -->
+                <div class="w-full md:w-2/3">
+                    <!-- UPDATED: Point #6 (Headline) -->
+                    <h1 class="font-display text-5xl md:text-7xl font-bold mb-4 dark:text-stone-100">
+                        I turn complex ESG & EHS challenges into elegant, human-centered solutions.
+                    </h1>
+                    <!-- NEW: Professional Title (Updated Narrative) -->
+                    <!-- UPDATED: Point #7 (Sub-headline) -->
+                    <p class="font-mono text-sm md:text-lg text-stone-600 dark:text-stone-400">
+                        I'm a Business Analyst who bridges the gap between data and design, creating clear, data-driven solutions for complex ESG, EHS, and QMS challenges.
+                    </p>
+                </div>
+                <!-- The "Sticky Note" (UPDATED Part 1.1) -->
+                <div class="w-full md:w-1/3 flex-shrink-0">
+                    <div class="sticky-note sticky-note-yellow p-6 md:p-8 w-full max-w-xs mx-auto">
+                        <!-- UPDATED: Point #8 (Sticky Note Text) -->
+                        <p class="font-hand text-2xl md:text-3xl text-stone-800">
+                            Hello, I'm Sumanth. Welcome to my digital atelier.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+          START: SECTION SWAP
+          "After-Hours Atelier" is now first.
+        -->
+        <section id="after-hours-atelier" class="mb-24 md:mb-32 fade-in-up" aria-labelledby="personal-projects-heading">
+            <h2 id="personal-projects-heading" class="font-display text-4xl font-bold mb-12 text-center dark:text-stone-100">After-Hours Atelier</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16">
+                
+                <!-- Personal Project 1 (Moved) -->
+                <div 
+                    class="project-card relative cursor-pointer group"
+                    data-project="project-1"
+                >
+                    <div class="paper overflow-hidden rounded-md" data-caption="Sourdough Starter Tracker">
+                        <img 
+                            src="https://placehold.co/600x400/a3e635/44403c?text=Feed+%22Bread+Pitt%22" 
+                            alt="A preview of the Sourdough Starter Tracker project" 
+                            class="project-image w-full h-auto object-cover bg-stone-200 dark:bg-stone-700 animate-pulse"
+                            loading="lazy"
+                        >
+                    </div>
+                    <div class="text-center mt-4 pt-4"> <!-- Added pt-4 for polaroid bottom -->
+                        <h3 class="font-display text-2xl font-bold dark:text-stone-100">Sourdough Tracker</h3>
+                        <p class="font-body text-sm text-stone-600 mb-2 dark:text-stone-400">A PWA to manage feeding schedules for my unruly starter, "Bread Pitt".</p>
+                        <span class="font-hand text-cyan-600 text-lg dark:text-cyan-400">View Case Study →</span>
+                    </div>
+                </div>
+
+                <!-- Personal Project 2 (Moved) -->
+                <div 
+                    class="project-card relative cursor-pointer group"
+                    data-project="project-2"
+                >
+                    <div class="paper overflow-hidden rounded-md" data-caption="Vinyl Album Scrambler">
+                        <img 
+                            src="https://placehold.co/600x400/ec4899/ffffff?text=Spinning...+The+Smiths" 
+                            alt="A preview of the Vinyl Album Scrambler" 
+                            class="project-image w-full h-auto object-cover bg-stone-200 dark:bg-stone-700 animate-pulse"
+                            loading="lazy"
+                        >
+                    </div>
+                    <div class="text-center mt-4 pt-4">
+                        <h3 class="font-display text-2xl font-bold dark:text-stone-100">Vinyl Album Scrambler</h3>
+                        <p class="font-body text-sm text-stone-600 mb-2 dark:text-stone-400">Can't decide what to spin? This app picks for me. (It's always The Smiths).</p>
+                        <span class="font-hand text-cyan-600 text-lg dark:text-cyan-400">View Case Study →</span>
+                    </div>
+                </div>
+
+                <!-- Personal Project 3 (Moved) -->
+                <div 
+                    class="project-card relative cursor-pointer group"
+                    data-project="project-3"
+                >
+                    <div class="paper overflow-hidden rounded-md" data-caption="AI Tupperware Picker">
+                        <img 
+                            src="https://placehold.co/600x400/0d9488/ffffff?text=For+3+olives%3F%0A%0AUse+the+LARGE+LASAGNA+DISH" 
+                            alt="A preview of the AI Tupperware Picker" 
+                            class="project-image w-full h-auto object-cover bg-stone-200 dark:bg-stone-700 animate-pulse"
+                            loading="lazy"
+                        >
+                    </div>
+                    <div class="text-center mt-4 pt-4">
+                        <h3 class="font-display text-2xl font-bold dark:text-stone-100">AI Tupperware Picker</h3>
+                        <p class="font-body text-sm text-stone-600 mb-2 dark:text-stone-400">Using ML to (try to) solve my "which container" problem. A noble failure.</p>
+                        <span class="font-hand text-cyan-600 text-lg dark:text-cyan-400">View Case Study →</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        
+        <!-- 
+          UPDATED: Point #1, #5, #13
+          This is now "Professional Work"
+          CLIENT INFO REMOVED
+        -->
+        <section id="professional-work" class="mb-24 md:mb-32 fade-in-up" aria-labelledby="projects-heading">
+            <h2 id="projects-heading" class="font-display text-4xl font-bold mb-12 text-center dark:text-stone-100">Professional Case Studies</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16">
+                
+                <!-- NEW: Professional Project 1 (IMPLEMENTS Points #9, 10, 11, 12) -->
+                <div 
+                    class="project-card relative cursor-pointer group"
+                    data-project="project-4"
+                >
+                    <!-- Point #11: Polaroid Caption -->
+                    <div class="paper overflow-hidden rounded-md" data-caption="This one was a beast. Proud of it.">
+                        <!-- Point #12: Placeholder Image -->
+                        <img 
+                            src="https://placehold.co/600x400/06b6d4/ffffff?text=EHS+Platform+Dashboard" 
+                            alt="A preview of the EHS Platform project" 
+                            class="project-image w-full h-auto object-cover bg-stone-200 dark:bg-stone-700 animate-pulse"
+                            loading="lazy"
+                        >
+                    </div>
+                    <div class="text-center mt-4 pt-4"> <!-- Added pt-4 for polaroid bottom -->
+                        <!-- Point #9: BA-Focused Title -->
+                        <h3 class="font-display text-2xl font-bold dark:text-stone-100">Designing a Scalable EHS Platform</h3>
+                        <!-- Point #10: Compelling Teaser -->
+                        <p class="font-body text-sm text-stone-600 mb-2 dark:text-stone-400">How we built a scalable EHS platform that cut audit prep time by 40%.</p>
+                        <span class="font-hand text-cyan-600 text-lg dark:text-cyan-400">View Case Study →</span>
+                    </div>
+                </div>
+
+                <!-- NEW: Professional Project 2 (IMPLEMENTS Points #9, 10, 11, 12) -->
+                <!-- CLIENT INFO REMOVED -->
+                <div 
+                    class="project-card relative cursor-pointer group"
+                    data-project="project-5"
+                >
+                    <!-- Point #11: Polaroid Caption -->
+                    <div class="paper overflow-hidden rounded-md" data-caption="Making Gherkin a love language.">
+                        <!-- Point #12: Placeholder Image -->
+                        <img 
+                            src="https://placehold.co/600x400/3b82f6/ffffff?text=QMS+Workflow" 
+                            alt="A preview of the Enterprise QMS Modules" 
+                            class="project-image w-full h-auto object-cover bg-stone-200 dark:bg-stone-700 animate-pulse"
+                            loading="lazy"
+                        >
+                    </div>
+                    <div class="text-center mt-4 pt-4">
+                        <!-- Point #9: BA-Focused Title -->
+                        <h3 class="font-display text-2xl font-bold dark:text-stone-100">Enterprise QMS Modules</h3>
+                        <!-- Point #10: Compelling Teaser -->
+                        <p class="font-body text-sm text-stone-600 mb-2 dark:text-stone-400">Streamlining complex lab test data workflows for global industry leaders.</p>
+                        <span class="font-hand text-cyan-600 text-lg dark:text-cyan-400">View Case Study →</span>
+                    </div>
+                </div>
+
+                <!-- NEW: Professional Project 3 (IMPLEMENTS Points #9, 10, 11, 12) -->
+                <div 
+                    class="project-card relative cursor-pointer group"
+                    data-project="project-6"
+                >
+                    <!-- Point #11: Polaroid Caption -->
+                    <div class="paper overflow-hidden rounded-md" data-caption="Data science 🤝 user empathy.">
+                        <!-- Point #12: Placeholder Image -->
+                        <img 
+                            src="https://placehold.co/600x400/a855f7/ffffff?text=Predictive+Risk+Model" 
+                            alt="A preview of the AI/ML in Compliance project" 
+                            class="project-image w-full h-auto object-cover bg-stone-200 dark:bg-stone-700 animate-pulse"
+                            loading="lazy"
+                        >
+                    </div>
+                    <div class="text-center mt-4 pt-4">
+                        <!-- Point #9: BA-Focused Title -->
+                        <h3 class="font-display text-2xl font-bold dark:text-stone-100">AI/ML in Compliance</h3>
+                        <!-- Point #10: Compelling Teaser -->
+                        <p class="font-body text-sm text-stone-600 mb-2 dark:text-stone-400">Spearheading an AI initiative to improve early risk detection by 20%.</p>
+                        <span class="font-hand text-cyan-600 text-lg dark:text-cyan-400">View Case Study →</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <!-- 
+          END: SECTION SWAP
+        -->
+
+
+        <!-- 
+          Phase 2: P2: The Human Behind the Craft (About Me)
+          "artist's statement" on a sheet of paper.
+          CLIENT INFO REMOVED
+        -->
+        <section id="about" class="mb-24 fade-in-up" aria-labelledby="about-heading">
+            <div class="paper max-w-4xl mx-auto p-8 md:p-12 lg:p-16 relative transform -rotate-1 shadow-xl">
+                <!-- REMOVED: Push Pin -->
+                <!-- <div id="push-pin" ... </div> -->
+                
+                <!-- NEW: Binder Clip -->
+                <svg id="binder-clip" class="bg-item" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#b0b0b0;"/>
+                        <stop offset="50%" style="stop-color:#f0f0f0;"/>
+                        <stop offset="100%" style="stop-color:#b0b0b0;"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M 20 50 L 80 50 L 80 80 C 80 91.0457 71.0457 100 60 100 L 40 100 C 28.9543 100 20 91.0457 20 80 Z" fill="#44403c"/>
+                    <path d="M 30 50 C 30 38.9543 38.9543 30 50 30 C 61.0457 30 70 38.9543 70 50" stroke="url(#metal)" stroke-width="8" fill="none" stroke-linecap="round"/>
+                </svg>
+                
+                <h2 id="about-heading" class="font-display text-4xl font-bold mb-8 text-center dark:text-stone-100">The Human Behind the Craft</h2>
+                
+                <!-- NEW: Part 2.4 - Prose Wrapper -->
+                <div class="space-y-8 prose prose-lg max-w-none prose-manifesto">
+                    <div>
+                        <!-- NEW: Part 2.4 - Handwritten Header -->
+                        <h3 class="about-section-header">The Origin Story</h3>
+                        <!-- UPDATED: Point #14 (Origin Story Para 1) -->
+                        <!-- CLIENT INFO REMOVED -->
+                        <p>My journey began in Systems Engineering and Data Science, but I found my passion in a surprising place: the human gap between technical requirements and real-world users. I was always the one bridging the gap for clients in the automotive and manufacturing sectors, and I realized the 'gap' was almost always a *human* one. I started redesigning complex processes in my notebook, not just for efficiency, but for *clarity* and *joy*. The moment I translated a complex requirement into a simple Figma prototype and saw a stakeholder's face light up... I was hooked.</p>
+                        <!-- UPDATED: Point #15 (Origin Story Para 2) -->
+                        <h3 class="about-section-header">My Approach as a Partner</h3>
+                        <p>I'm now a trusted partner through the entire software lifecycle, managing product roadmaps, writing user stories in Gherkin, and leading Agile ceremonies. I'm just as comfortable in Figma with UX teams as I am in Postman validating REST API endpoints.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="about-section-header">The Philosophy</h3>
+                        <!-- UPDATED: Point #16 (Philosophy Cliche) -->
+                        <p>I believe design is a non-negotiable blend of empathy, logic, and a dash of the unexpected. It's my job to be the user's loudest advocate and the business's smartest partner. My non-negotiable? <strong class="font-hand">"Don't make me think"</strong> is a good start, but <strong class="font-hand">"Make me feel"</strong> is where the real connection happens. (And 'make it Gherkin' is where the clarity begins.)</p>
+                    </div>
+
+                    <div>
+                        <h3 class="about-section-header">The Creative Arsenal (My Toolkit)</h3>
+                        <!-- UPDATED: Point #17, #18, #19 - Grouped Toolkit -->
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-mono text-sm font-semibold uppercase text-stone-600 dark:text-stone-400">BA & Strategy</h4>
+                                <div class="flex flex-wrap gap-3 mt-2">
+                                    <span class="toolkit-tag">Azure DevOps</span>
+                                    <span class="toolkit-tag">Jira</span>
+                                    <span class="toolkit-tag">Gherkin</span>
+                                    <span class="toolkit-tag">User Stories</span>
+                                    <span class="toolkit-tag">BPMN</span>
+                                    <span class="toolkit-tag">Agile Ceremonies</span>
+                                    <span class="toolkit-tag">UAT Planning</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-mono text-sm font-semibold uppercase text-stone-600 dark:text-stone-400">Design & Prototyping</h4>
+                                <div class="flex flex-wrap gap-3 mt-2">
+                                    <span class="toolkit-tag">Figma</span>
+                                    <!-- Point #19: Proto.io check - Kept as requested -->
+                                    <span class="toolkit-tag">Proto.io</span>
+                                    <span class="toolkit-tag">Balsamiq</span>
+                                    <span class="toolkit-tag">Axure</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-mono text-sm font-semibold uppercase text-stone-600 dark:text-stone-400">Data & Analytics</h4>
+                                <div class="flex flex-wrap gap-3 mt-2">
+                                    <span class="toolkit-tag">SQL</span>
+                                    <span class="toolkit-tag">Power BI</span>
+                                    <span class="toolkit-tag">Tableau</span>
+                                    <span class="toolkit-tag">ETL</span>
+                                    <span class="toolkit-tag">Predictive Analytics</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-mono text-sm font-semibold uppercase text-stone-600 dark:text-stone-400">Domains & Tools</h4>
+                                <div class="flex flex-wrap gap-3 mt-2">
+                                    <span class="toolkit-tag">ESG</span>
+                                    <span class="toolkit-tag">EHS</span>
+                                    <span class="toolkit-tag">QMS</span>
+                                    <span class="toolkit-tag">ERP</span>
+                                    <span class="toolkit-tag">Postman</span>
+                                    <span class="toolkit-tag">REST APIs</span>
+                                    <span class="toolkit-tag">Zephyr</span>
+                                    <span class="toolkit-tag">TestRail</span>
+                                    <span class="toolkit-tag">Smartsheet</span>
+                                    <!-- Point #18: MS Project check - Not present, as suggested -->
+                                    <span class="toolkit-tag tag-coffee">Too much coffee</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="about-section-header">The Human Bits</h3>
+                        <!-- UPDATED: Point #20 (Human Bits text) -->
+                        <p>When I'm not writing user stories or querying databases, you can find me trying to perfect a sourdough starter (a study in process), digging through crates of old vinyl (a study in discovery), or getting lost on a hiking trail. What fuels my creativity? Weird documentaries, strong espresso, and the chaos of a public park. (I'm also convinced I can guess the exact right-sized Tupperware for leftovers on the first try. It's a gift.)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+          "File Cabinet" Section for Professional Details
+          CLIENT INFO REMOVED
+        -->
+        <section id="professional-files" class="mb-24 fade-in-up" aria-labelledby="files-heading">
+            <!-- UPDATED: Point #21 (Headline Hyphenation) -->
+            <h2 id="files-heading" class="font-display text-4xl font-bold mb-12 text-center dark:text-stone-100">The Not-So-Boring Paperwork</h2>
+            
+            <div class="file-cabinet paper max-w-4xl mx-auto p-8 md:p-12 lg:p-16 relative transform rotate-1 shadow-xl">
+                <!-- Tab Headers -->
+                <div class="file-tabs">
+                    <!-- UPDATED: Point #27 (Rename Tab), #28 (Tab Icon), #29 (Tab Icon) -->
+                    <button class="tab-button active" data-tab="tab-experience">🗂️ Experience</button>
+                    <button class="tab-button" data-tab="tab-highlights">💡 Project Highlights</button>
+                    <button class="tab-button" data-tab="tab-education">🎓 Education</button>
+                    <button class="tab-button" data-tab="tab-certs">🏅 Certifications</button>
+                </div>
+                
+                <!-- Tab Content -->
+                <div class="file-content prose max-w-none prose-manifesto">
+                    <!-- Experience Panel -->
+                    <div id="tab-experience" class="tab-panel active">
+                        <ul>
+                            <li>
+                                <h4>Integration Lead & Business Analyst</h4>
+                                <div class="company-role">RGBSI | Bangalore, India | 07/2023 - Present</div>
+                                <ul class="details">
+                                    <!-- UPDATED: Point #22 (Highlight Wins) -->
+                                    <li>Authored <strong>200+</strong> Gherkin-based user stories for modules such as PPAP, Non-Conformity, and Risk Assessment.</li>
+                                    <li>Led Agile ceremonies (sprint planning, backlog grooming, sprint reviews) for a <strong>7-member</strong> cross-functional squad.</li>
+                                    <li>Partnered with UX teams to prototype EHS and PO Management workflows in Figma, Axure, and Balsamiq.</li>
+                                    <li>Validated and documented REST APIs using Postman and optimized Swagger/OpenAPI specifications.
+                                    <!-- CLIENT INFO REMOVED -->
+                                    <li>Created UAT plans in Zephyr for modules including Audit, Work Permit, and Incident Management for major clients in automotive and manufacturing.</li>
+                                    <li>Queried MSSQL databases to build Superset dashboards tracking adoption of ESG and EHS tools.</li>
+                                    <li>Oversaw SDLC compliance with GRI, SASB, and OSHA standards.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Advertisement Moderator & Analyst</h4>
+                                <div class="company-role">Amazon | Bangalore, India | 07/2022-07/2023</div>
+                                <ul class="details">
+                                    <!-- UPDATED: Point #22 (Highlight Wins) -->
+                                    <li>Analyzed ad violation patterns using Excel and Power BI to support global moderation workflows, contributing to a <strong>150%</strong> increase in operational efficiency.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- UPDATED: Point #23 (Styling), #24 (Expansion), #27 (Tab ID) -->
+                    <!-- Key Projects Panel (Now Project Highlights) -->
+                    <!-- CLIENT INFO REMOVED -->
+                    <div id="tab-highlights" class="tab-panel">
+                        <ul class="project-list">
+                            <li>
+                                <!-- Point #23: Fixed Styling (is H4) -->
+                                <h4>Scalable EHS Platform</h4>
+                                <!-- Point #24: Expanded Bullets -->
+                                <ul class="details">
+                                    <li>Led end-to-end business analysis, ensuring compliance with GRI and SASB standards.</li>
+                                    <li>Delivered a solution that cut client audit prep time by <strong>40%</strong>.</li>
+                                    <li><strong>Toolkit:</strong> Jira, Gherkin, Figma, Power BI</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Enterprise QMS Modules</h4>
+                                <ul class="details">
+                                    <li>Gathered requirements for PPAP and Non-Conformity modules.</li>
+                                    <li>Streamlined complex lab test data workflows for global industry leaders.</li>
+                                    <li><strong>Toolkit:</strong> Azure DevOps, Gherkin, Postman, SQL</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Power BI Performance Dashboards</h4>
+                                <ul class="details">
+                                    <li>Developed interactive dashboards to track process performance metrics across ESG, CAPA, and risk modules.</li>
+                                    <li><strong>Toolkit:</strong> Power BI, SQL, ETL</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>OEM API Integration</h4>
+                                <ul class="details">
+                                    <li>Authored detailed API requirements for third-party systems, automating PPAP, product lifecycle and test result syncing.</li>
+                                    <li><strong>Toolkit:</strong> Postman, REST APIs, Swagger</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>AI/ML in Compliance</h4>
+                                <ul class="details">
+                                    <li>Spearheaded analysis for integrating AI/ML models into compliance risk modules.</li>
+                                    <li>Initial analysis proved a <strong>20%</strong> improvement in early risk detection.</li>
+                                    <li><strong>Toolkit:</strong> SQL, Power BI, Jira, Predictive Analytics</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Education Panel -->
+                    <div id="tab-education" class="tab-panel">
+                        <ul class="education-list">
+                            <li>
+                                <h4>Post Graduate Diploma, Data Science</h4>
+                                <div class="company-role">Steinbeis University, Germany (Completed 2022)</div>
+                            </li>
+                            <li>
+                                <h4>B.E, Mechanical Engineering</h4>
+                                <div class="company-role">Dayananda Sagar College (2017-2021)</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Certifications Panel -->
+                    <div id="tab-certs" class="tab-panel">
+                        <ul class="certs-list">
+                            <!-- UPDATED: Point #25 (Dates), #26 (Titles) -->
+                            <li>
+                                <h4>Google UX Design Professional Certificate</h4>
+                                <div class="company-role">Google (Expected 2025)</div>
+                            </li>
+                            <li>
+                                <h4>Microsoft Certified: Business Analyst Associate</h4>
+                                <div class="company-role">Microsoft and LinkedIn (Expected 2025)</div>
+                            </li>
+                            <li>
+                                <h4>Atlassian Certified: Agile Project Management</h4>
+                                <div class="company-role">Atlassian (Expected 2025)</div>
+                            </li>
+                             <li>
+                                <h4>IBM Machine Learning with Python</h4>
+                                <div class="company-role">IBM (2024)</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-stone-500 font-body text-sm mt-16 dark:text-stone-400">
+            <!-- NEW: Point #43 (Footer CTA) -->
+            <p class="font-hand text-2xl text-stone-700 dark:text-stone-300 mb-6">Intrigued? Let's build something elegant together.</p>
+            
+            <!-- NEW: Point #44 (Clearer Socials) -->
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-6 mb-4">
+                <a href="https://linkedin.com/in/sumanth-udupi" target="_blank" class="nav-link text-lg inline-flex items-center gap-2 dark:text-stone-400 dark:hover:text-cyan-400" aria-label="LinkedIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    LinkedIn &rarr;
+                </a>
+                 <a href="https://github.com/SumanthUdupi" target="_blank" class="nav-link text-lg inline-flex items-center gap-2 dark:text-stone-400 dark:hover:text-cyan-400" aria-label="GitHub">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    GitHub &rarr;
+                </a>
+                 <a href="mailto:sumanthudupi858@gmail.com" class="nav-link text-lg inline-flex items-center gap-2 dark:text-stone-400 dark:hover:text-cyan-400" aria-label="Email">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    Email Me &rarr;
+                </a>
+                 <a href="tel:+919741712966" class="nav-link text-lg inline-flex items-center gap-2 dark:text-stone-400 dark:hover:text-cyan-400" aria-label="Phone">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    Phone &rarr;
+                </a>
+            </div>
+            <p>Designed and built with 🎨, ☕, and a few metaphors.</p>
+            <!-- UPDATED: Point #46 (Dynamic Year) -->
+            <p>&copy; <span id="current-year">2025</span> Sumanth Udupi. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <!-- 
+      Phase 1: P1: The Showpiece (Case Study Modal)
+      This is hidden by default and will be populated by JavaScript.
+      It's the "pull-out" transition you described.
+      (UPDATED Part 3.1)
+    -->
+    <div id="modal" class="modal modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 invisible opacity-0" aria-modal="true" role="dialog">
+        <!-- The Modal Content "Paper" -->
+                <div class="modal-content paper relative max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-lg shadow-2xl">
+            <!-- Close Button - NEW: Part 2.5 -->
+            <button id="close-modal" class="modal-close-button absolute top-4 right-4 text-stone-400 z-10" aria-label="Close case study">
+                X
+            </button>
+            
+            <!-- Content will be injected here by JS -->
+            <div id="modal-content-target"></div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Case Study Data ---
+            // CLIENT INFO REMOVED from project-5
+            const caseStudies = {
+                // --- PERSONAL PROJECTS ---
+                'project-1': {
+                    title: 'Sourdough Starter Tracker',
+                    hook: 'A simple PWA to manage feeding schedules for my unruly starter, "Bread Pitt".',
+                    img: 'https://placehold.co/800x400/84cc16/ffffff?text=Sourdough+Tracker',
+                    context: {
+                        role: "Baker / Designer / Engineer",
+                        team: "Just me and Bread Pitt",
+                        timeline: "One weekend",
+                        toolkit: "PWA, JavaScript, localStorage" // UPDATED: Point #35
+                    },
+                    problem: { // ACT I
+                        title: "ACT I: The Problem (The Sticky Situation)",
+                        body: "My sourdough starter, 'Bread Pitt', was needy. I kept forgetting its feeding schedule. Sticky notes were everywhere. My kitchen looked like a scene from *A Beautiful Mind*. I needed a simple, digital tool that would just tell me what to do and when."
+                    },
+                    investigation: { // ACT II
+                        title: "ACT II: The Process (The Floury Mess)",
+                        body: "I didn't need a complex app. I needed a button. My 'user research' was me, standing in my kitchen, covered in flour, wishing for a simpler way. The 'Aha!' moment was realizing this should be a Progressive Web App (PWA) so it would feel like a native app on my phone, but with zero installation."
+                    },
+                    solution: { // ACT III
+                        title: "ACT III: The Solution (The Rise)",
+                        body: "A super-minimalist single-page app. It has one big button: 'I just fed Bread Pitt.' When clicked, it resets a 12-hour timer. The background color changes based on the starter's 'hunger' level (Green = Happy, Yellow = Hungry, Red = STARVING). It uses localStorage to persist the timer and sends a browser notification when it's time to feed."
+                    },
+                    results: { // EPILOGUE
+                        title: "EPILOGUE: The Impact (The Perfect Loaf)",
+                        // UPDATED: Point #36 (Elaborate Results)
+                        body: "<ul><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Result:</strong> Bread Pitt is thriving and my bread is 10% more consistent.</li><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Learning:</strong> Mastered PWA fundamentals, including browser notifications and localStorage.</li></ul>"
+                    },
+                    reflection: {
+                        title: "The Reflection", // UPDATED: Point #34 (Standardize Title)
+                        body: "This project was a joy. It's a reminder that the 'simplest' tools can be the most delightful. It's also proof that I can (and will) apply complex problem-solving (PWA, localStorage, notifications) to even the silliest of personal problems."
+                    }
+                },
+                'project-2': {
+                    title: 'Vinyl Album Scrambler',
+                    hook: "Can't decide what to spin? This app picks for me. (It's always The Smiths).",
+                    img: 'https://placehold.co/800x400/ec4899/ffffff?text=Vinyl+Scrambler',
+                    context: {
+                        role: "DJ / Developer",
+                        team: "Me, myself, and my record collection",
+                        timeline: "One evening",
+                        toolkit: "JavaScript, JSON, Discogs API" // UPDATED: Point #35
+                    },
+                    problem: {
+                        title: "ACT I: The Problem (Analysis Paralysis)",
+                        body: "I have a decent vinyl collection, but I'm lazy. I'd stand in front of it, paralyzed by choice, and end up just putting on 'The Queen is Dead' for the 500th time. I needed a way to randomize my *physical* collection."
+                    },
+                    investigation: {
+                        title: "ACT II: The Process (The Digital Crate Dig)",
+                        body: "I first scraped my Discogs collection into a JSON file. This was the 'creative mess'—just a giant list of albums. I realized I didn't just want a random album. I wanted *serendipity*. I needed to be able to filter by 'vibe' (e.g., 'Chill Sunday', 'Party', 'Sad Boy Hours')."
+                    },
+                    solution: {
+                        title: "ACT III: The Solution (The Needle Drop)",
+                        body: "A single-page app built with simple JS. It has a few 'vibe' buttons. You click one, and it fetches my JSON, filters by the vibe tag, and then 'flips' through album covers with a satisfying animation before landing on one. It's pure, unnecessary, delightful digital-analog interaction."
+                    },
+                    results: {
+                        title: "EPILOGUE: The Impact",
+                        // UPDATED: Point #37 (Elaborate Results)
+                        body: "<ul><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Result:</strong> I listen to a 30% wider range of my record collection.</li><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Learning:</strong> Practiced API data scraping and simple DOM-based animations.</li></ul>"
+                    },
+                    reflection: {
+                        title: "The Reflection",
+                        body: "This was a perfect exercise in 'design for delight.' It serves no productive purpose, which is why I love it. It's a tiny piece of digital art that solves a tiny, personal problem in a fun, tactile way."
+                    }
+                },
+                'project-3': {
+                    title: 'AI Tupperware Picker',
+                    hook: 'Using ML to (try to) solve my "which container" problem. A noble failure.',
+                    img: 'https://placehold.co/800x400/0d9488/ffffff?text=AI+Tupperware+Picker',
+                    context: {
+                        role: "Data Scientist / Comedian",
+                        team: "My leftover curry vs. The Machine",
+                        timeline: "Two weeks of confusion",
+                        toolkit: "Python, MobileNet, TensorFlow.js" // UPDATED: Point #35
+                    },
+                    problem: {
+                        title: "ACT I: The Problem (The Container Conundrum)",
+                        body: "I have a joke in my bio about guessing the right Tupperware. It's not really a joke. I'm terrible at it. I always pick one that's way too big or comically small. My hypothesis: could I use a simple ML model to help?"
+                    },
+                    investigation: { // ACT II
+                        title: "ACT II: The Process (The 'Data' Collection)", // UPDATED: Point #32 (Bug Fix)
+                        body: "This was the absurd part. For two weeks, I took pictures of my leftovers *before* and *after* container-ing them. I logged the food type, approximate volume (e.g., 'half a bowl of soup'), and the 'correct' container I eventually used. My 'dataset' was a mess of 30 photos and a very judgmental CSV file."
+                    },
+                    solution: { // ACT III
+                        title: "ACT III: The Solution (The 'Intelligent' Suggestion)", // UPDATED: Point #33 (Bug Fix)
+                        body: "I tried to use a simple image classification model (using a pre-trained model like MobileNet) to identify 'type' of leftover (e.g., 'liquid', 'solid', 'pile') and 'volume'. The app would then suggest, 'This looks like a job for the 8oz round container.' The result? It was *hilariously* wrong. It suggested my largest glass container for three lonely olives."
+                    },
+                    results: { // EPILOGUE
+                        title: "EPILOGUE: The Impact (The Humbling)",
+                        // UPDATED: Point #38 (Elaborate Results)
+                        body: "<ul><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Result:</strong> A hilarious failure that correctly identifies leftovers 15% of the time.</li><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Learning:</strong> A profound, hands-on lesson in 'garbage in, garbage out' and the data-hungry nature of ML.</li></ul>"
+                    },
+                    reflection: {
+                        title: "The Reflection",
+                        body: "This is my favorite 'project.' It shows my willingness to experiment, my technical curiosity (I *did* deploy a model!), and my ability to find value (and humor) in failure. I'm a better analyst because I know what *doesn't* work, and this project is the funniest proof I have."
+                    }
+                },
+                
+                // --- NEW: PROFESSIONAL PROJECTS (Point #3) ---
+                'project-4': {
+                    title: 'Designing a Scalable EHS Platform',
+                    hook: 'How we built a scalable EHS platform that cut client audit prep time by 40%.',
+                    img: 'https://placehold.co/800x400/06b6d4/ffffff?text=EHS+Platform+Dashboard+(Anonymized)',
+                    context: {
+                        role: "Lead Business Analyst",
+                        team: "7-member cross-functional squad",
+                        timeline: "6 Months",
+                        toolkit: "Jira, Gherkin, Figma, SQL, Power BI"
+                    },
+                    problem: {
+                        title: "ACT I: The Problem (The Audit Nightmare)",
+                        body: "Our clients were drowning in spreadsheets and disparate systems for Environmental, Health, and Safety (EHS) tracking. Preparing for audits was a manual, month-long nightmare, and they had zero real-time visibility into their compliance status. They needed a single, scalable source of truth."
+                    },
+                    investigation: {
+                        title: "ACT II: The Process (The Discovery & Design)",
+                        body: "I led discovery workshops with stakeholders (from plant managers to C-suite execs) to map *hundreds* of processes. We found the biggest pains: Incident Management and Audit Tracking. I partnered with our UX team to prototype new, streamlined workflows in Figma, focusing on 'at-a-glance' dashboards. I translated these into over 50 Gherkin user stories for our dev squad, defining clear acceptance criteria for complex GRI and SASB compliance logic."
+                    },
+                    solution: {
+                        title: "ACT III: The Solution (The Single Source of Truth)",
+                        body: "We delivered a modular EHS platform with a centralized dashboard. I designed the Power BI integration specs, allowing real-time data from incident forms to populate compliance widgets. My Gherkin stories ensured that complex logic (like OSHA recordability) was built correctly the first time, and I managed the UAT plan in Zephyr, resulting in a 98% pass rate on first execution."
+                    },
+                    results: {
+                        title: "EPILOGUE: The Impact",
+                        body: "<ul><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Result:</strong> Reduced client audit preparation time by an average of <strong>40%</strong>.</li><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Result:</strong> Improved real-time compliance visibility from ~20% to <strong>95%</strong>.</li><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Learning:</strong> Solidified my ability to translate complex, high-stakes regulatory requirements (ESG/EHS) into actionable, testable user stories that developers love.</li></ul>"
+                    },
+                    reflection: {
+                        title: "The Reflection",
+                        body: "This project proved that good BA work isn't just about 'gathering requirements'—it's about empathy-driven design. By focusing on the *human* frustration of the plant manager, we built a tool that wasn't just compliant, but genuinely useful. It cemented my passion for the ESG/EHS domain."
+                    }
+                },
+                // CLIENT INFO REMOVED
+                'project-5': {
+                    title: 'Enterprise QMS Modules',
+                    hook: 'Streamlining complex lab test data workflows for global industry leaders.',
+                    img: 'https://placehold.co/800x400/3b82f6/ffffff?text=QMS+Workflow+(Anonymized)',
+                    context: {
+                        role: "Integration BA",
+                        team: "Client Stakeholders, Dev Squad",
+                        timeline: "Ongoing",
+                        toolkit: "Azure DevOps, Gherkin, Postman, SQL"
+                    },
+                    problem: {
+                        title: "ACT I: The Problem (The Data Bottleneck)",
+                        body: "Global automotive leaders have intense Quality Management (QMS) standards. Their lab test data for new parts (PPAP) was getting stuck in siloed systems. A 'non-conformity' issue in one plant wasn't visible to an engineering team in another. This was slow, expensive, and risky."
+                    },
+                    investigation: {
+                        title: "ACT II: The Process (Speaking API & Gherkin)",
+                        body: "My job was to be the translator. I dove deep with client-side engineers to understand their *exact* data workflow. I then documented the REST API specifications in Postman and Swagger, defining every endpoint and payload needed to connect their systems to ours. For the front-end modules, I wrote Gherkin stories that read like plain English but contained all the business logic: 'Given I am a Quality Engineer, When I upload a PPAP document, Then the system should...'"
+                    },
+                    solution: {
+                        title: "ACT III: The Solution (The Synchronized Workflow)",
+                        body: "We created automated, API-driven workflows for PPAP and Non-Conformity modules. The Gherkin stories I wrote became the 'single source of truth' for devs and QA, drastically reducing ambiguity. The Postman collections I built became the core of our integration testing, ensuring data flowed correctly from day one."
+                    },
+                    results: {
+                        title: "EPILOGUE: The Impact",
+                        body: "<ul><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Result:</strong> Automated data syncing for PPAP and product lifecycle, saving an estimated <strong>200+</strong> man-hours per month per client.</li><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Result:</strong> Created a shared, unambiguous language (Gherkin) that aligned business, dev, and QA teams.</li><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Learning:</strong> How to reverse-engineer complex, legacy enterprise systems and write crystal-clear API documentation and user stories that bridge the gap.</li></ul>"
+                    },
+                    reflection: {
+                        title: "The Reflection",
+                        body: "This project was all about deep, technical empathy. I had to understand the world of a quality engineer *and* the world of a REST API. I learned that 'Gherkin' isn't just a syntax; it's a tool for building shared understanding. I found I love making the highly technical perfectly clear."
+                    }
+                },
+                'project-6': {
+                    title: 'AI/ML in Compliance',
+                    hook: 'Spearheading a predictive AI initiative to improve early risk detection by 20%.',
+                    img: 'https://placehold.co/800x400/a855f7/ffffff?text=Predictive+Risk+Model+(Concept)',
+                    context: {
+                        role: "BA / Data Analyst",
+                        team: "Data Science, Product Management",
+                        timeline: "3 Months (Analysis Phase)",
+                        toolkit: "SQL, Power BI, Python (Conceptual), Jira"
+                    },
+                    problem: {
+                        title: "ACT I: The Problem (Reacting vs. Predicting)",
+                        body: "Our clients were great at *reacting* to compliance issues (e.g., an incident happened, so we log it). But they had no way of *predicting* them. They had terabytes of historical data, but it was just sitting there. The C-suite asked, 'Can you use AI to tell us where the next risk is?'"
+                    },
+                    investigation: {
+                        title: "ACT II: The Process (Finding the Signal in the Noise)",
+                        body: "I was tasked with the analysis to see if this was even possible. I spent a month in SQL, querying and joining data from Audit, Incident, and Risk modules. I was looking for patterns. I found a strong correlation between 'near-miss' reports and future recordable incidents. I used Power BI to visualize this, proving to stakeholders that a predictive model was viable."
+                    },
+                    solution: {
+                        title: "ACT III: The Solution (The AI Business Case)",
+                        body: "I didn't build the model, but I built the *case* for it. I defined the business requirements for an AI/ML feature. I specified the data inputs (e.g., 'near-miss frequency', 'audit scores') and the desired output (a 'Facility Risk Score'). This analysis and visualization directly led to the project getting greenlit and staffed with a full data science team."
+                    },
+                    results: {
+                        title: "EPILOGUE: The Impact",
+                        body: "<ul><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Result:</strong> My analysis and business case directly led to a <strong>$500k</strong> strategic initiative being funded.</li><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Result:</strong> The resulting (in-progress) model is projected to improve early risk detection by <strong>20%</strong>.</li><li class='!pl-8 !mb-2 before:content-['✓'] before:text-green-600 before:absolute before:left-0 before:top-1'><strong>Learning:</strong> How to use my data science background to act as a bridge, translating a vague business goal ('use AI') into a specific, data-driven, and actionable project for a technical team.</li></ul>"
+                    },
+                    reflection: {
+                        title: "The Reflection",
+                        body: "This project was my favorite kind of work. It combined my skills in data science (SQL, Power BI, predictive analytics) with my core BA role (stakeholder management, requirements definition). I wasn't just taking notes; I was finding the story in the data and using it to build a compelling case for innovation."
+                    }
+                }
+            };
+
+            // --- Modal Elements ---
+            const modal = document.getElementById('modal');
+            const modalContentTarget = document.getElementById('modal-content-target');
+            const closeModalBtn = document.getElementById('close-modal');
+            const projectCards = document.querySelectorAll('.project-card');
+            
+            // --- NEW: Theme Toggle ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+
+            // --- NEW: Theme Init Function ---
+            const initTheme = () => {
+                // 1. Check localStorage
+                const userTheme = localStorage.getItem('theme');
+                
+                // 2. Check system preference
+                const systemIsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (userTheme === 'light') {
+                    // User explicitly chose light
+                    document.documentElement.classList.remove('dark');
+                } else if (userTheme === 'dark') {
+                    // User explicitly chose dark
+                    document.documentElement.classList.add('dark');
+                } else if (systemIsDark) {
+                    // No user choice, but system is dark
+                    document.documentElement.classList.add('dark');
+                } else {
+                    // Default to dark as per user request
+                     document.documentElement.classList.add('dark');
+                }
+            };
+
+            // --- NEW: Theme Toggle Click Listener ---
+            themeToggleBtn.addEventListener('click', () => {
+                // Toggle the 'dark' class on <html>
+                const isDark = document.documentElement.classList.toggle('dark');
+                // Save the user's choice to localStorage
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            });
+
+
+            // --- Open Modal Function ---
+            const openModal = (projectId) => {
+                const data = caseStudies[projectId];
+                if (!data) return;
+
+                // Build the "Visual Essay" from our data
+                // NEW: Added [data-animate] for stagger
+                // LIGHT MODE FIX: Added explicit text-stone-800, text-stone-700 colors for light mode
+                modalContentTarget.innerHTML = `
+                    <div class="p-8 md:p-12">
+                        <img src="${data.img}" alt="${data.title}" class="w-full rounded-md mb-6 shadow-md" data-animate>
+                        <h2 class="font-display text-4xl font-bold mb-4 text-stone-800 dark:text-stone-100" data-animate>${data.title}</h2>
+                        <p class="font-hand text-xl text-stone-600 mb-6 dark:text-stone-400" data-animate>${data.hook}</p>
+                        
+                        <!-- UPDATED: Point #35 (grid-cols-4) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 text-center" data-animate>
+                            <div class="bg-stone-100 dark:bg-stone-700 p-4 rounded-md">
+                                <h4 class="font-mono text-sm uppercase text-stone-500 dark:text-stone-400 mb-1">Role</h4>
+                                <p class="font-body font-medium text-stone-700 dark:text-stone-200">${data.context.role}</p>
+                            </div>
+                            <div class="bg-stone-100 dark:bg-stone-700 p-4 rounded-md">
+                                <h4 class="font-mono text-sm uppercase text-stone-500 dark:text-stone-400 mb-1">Team</h4>
+                                <p class="font-body font-medium text-stone-700 dark:text-stone-200">${data.context.team}</p>
+                            </div>
+                            <div class="bg-stone-100 dark:bg-stone-700 p-4 rounded-md">
+                                <h4 class="font-mono text-sm uppercase text-stone-500 dark:text-stone-400 mb-1">Timeline</h4>
+                                <p class="font-body font-medium text-stone-700 dark:text-stone-200">${data.context.timeline}</p>
+                            </div>
+                             <!-- UPDATED: Point #35 -->
+                            <div class="bg-stone-100 dark:bg-stone-700 p-4 rounded-md">
+                                <h4 class="font-mono text-sm uppercase text-stone-500 dark:text-stone-400 mb-1">Toolkit</h4>
+                                <p class="font-body font-medium text-stone-700 dark:text-stone-200">${data.context.toolkit}</p>
+                            </div>
+                        </div>
+
+                        <div class="prose prose-lg max-w-none space-y-6 prose-manifesto" data-animate>
+                            <div>
+                                <h3 class="font-display text-2xl mb-2 about-section-header">${data.problem.title}</h3>
+                                <p>${data.problem.body}</p>
+                            </div>
+                            <div>
+                                <h3 class="font-display text-2xl mb-2 about-section-header">${data.investigation.title}</h3>
+                                <p>${data.investigation.body}</p>
+                            </div>
+                            <div>
+                                <h3 class="font-display text-2xl mb-2 about-section-header">${data.solution.title}</h3>
+                                <p>${data.solution.body}</p>
+                            </div>
+                            <div>
+                                <h3 class="font-display text-2xl mb-2 about-section-header">${data.results.title}</h3>
+                                <!-- UPDATED: Changed from <p> to <div> to support <ul> -->
+                                <!-- LIGHT MODE FIX: Added explicit text-stone-700 for light mode -->
+                                <div class="font-body text-stone-700 dark:text-stone-300">${data.results.body}</div>
+                            </div>
+                            <div>
+                                <h3 class="font-display text-2xl mb-2 about-section-header">${data.reflection.title}</h3>
+                                <p>${data.reflection.body}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Show the modal
+                modal.classList.remove('invisible', 'opacity-0');
+                modal.classList.add('is-open');
+                
+                // NEW: Part 3.8 - "Depth of Field" & "Scroll Jank" fix
+                const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+                document.body.style.overflow = 'hidden';
+                document.body.style.paddingRight = `${scrollbarWidth}px`;
+                document.getElementById('main-content').classList.add('modal-open');
+
+                // NEW: Part 4.4 - Trigger stagger
+                staggerModalContent();
+            };
+
+            // --- Close Modal Function ---
+            const closeModal = () => {
+                // NEW: Part 4.4 - Reverse stagger
+                reverseStaggerModalContent(() => {
+                    modal.classList.add('invisible', 'opacity-0');
+                    modal.classList.remove('is-open');
+                    
+                    // NEW: Part 3.8 - "Depth of Field" & "Scroll Jank" fix
+                    document.body.style.overflow = 'auto'; // Unlock scrolling
+                    document.body.style.paddingRight = '0';
+                    document.getElementById('main-content').classList.remove('modal-open');
+                    
+                    // Clear content for next open
+                    setTimeout(() => {
+                        modalContentTarget.innerHTML = '';
+                    }, 300); // Wait for animation
+                });
+            };
+            
+            // --- NEW: Part 4.4 / 4.7 - Modal Stagger Functions ---
+            const staggerModalContent = () => {
+                const elements = modalContentTarget.querySelectorAll('[data-animate]');
+                elements.forEach((el, index) => {
+                    const delay = index * 80; // 80ms between each element
+                    setTimeout(() => {
+                        el.style.opacity = '1';
+                        // UPDATED: Part 4.9 - Swoop animation
+                        el.style.transform = 'translateY(0) translateX(0)';
+                    }, delay);
+                });
+            };
+            
+            const reverseStaggerModalContent = (callback) => {
+                const elements = Array.from(modalContentTarget.querySelectorAll('[data-animate]')).reverse();
+                if (elements.length === 0) {
+                    callback();
+                    return;
+                }
+                elements.forEach((el, index) => {
+                    const delay = index * 40;
+                    setTimeout(() => {
+                        el.style.opacity = '0';
+                        // UPDATED: Part 4.9 - Swoop animation
+                        el.style.transform = 'translateY(20px) translateX(-10px)';
+                        
+                        // If this is the last element, trigger the callback
+                        if (index === elements.length - 1) {
+                            setTimeout(callback, delay + 50); // Wait for animation to finish
+                        }
+                    }, delay);
+                });
+            };
+
+            // --- NEW: File Cabinet Tab Logic ---
+            const initFileCabinet = () => {
+                const tabButtons = document.querySelectorAll('.tab-button');
+                const tabPanels = document.querySelectorAll('.tab-panel');
+
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        // UPDATED: Use full ID from data-tab for robustness (Point #27)
+                        const targetTabId = button.dataset.tab; 
+
+                        // Deactivate all
+                        tabButtons.forEach(btn => btn.classList.remove('active'));
+                        tabPanels.forEach(panel => panel.classList.remove('active'));
+
+                        // Activate clicked
+                        button.classList.add('active');
+                        const targetPanel = document.getElementById(targetTabId);
+                        if (targetPanel) {
+                            targetPanel.classList.add('active');
+                        }
+                    });
+                });
+            };
+
+            // --- NEW: Set Current Year in Footer (Point #46) ---
+            const initFooterYear = () => {
+                const yearSpan = document.getElementById('current-year');
+                if (yearSpan) {
+                    yearSpan.textContent = new Date().getFullYear();
+                }
+            };
+
+            // --- Event Listeners ---
+            projectCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    openModal(card.dataset.project);
+                });
+            });
+
+            closeModalBtn.addEventListener('click', closeModal);
+            
+            // NEW: CV Button Jiggle on Click
+            const cvButton = document.getElementById('cv-button');
+            cvButton.addEventListener('click', (e) => {
+                // Add jiggle class
+                cvButton.classList.add('jiggle-click');
+                // Remove class after animation finishes
+                setTimeout(() => {
+                    cvButton.classList.remove('jiggle-click');
+                }, 400); // Match animation duration
+            });
+
+            // Close modal on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Close modal with 'Escape' key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+                    closeModal();
+                }
+            });
+
+            // --- Nav Link Smooth Scrolling ---
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    // Don't hijack the modal links
+                    if (this.closest('.modal')) return; 
+
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // NEW: Check for skip link
+                        // Manually set focus for skip link
+                        if (targetId === '#main-content') {
+                            targetElement.setAttribute('tabindex', '-1');
+                            targetElement.focus();
+                        }
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // --- P3: "Living Desktop" Mouse Parallax ---
+            const initMouseParallax = () => {
+                // Only run this on devices with a fine-grained pointer (a mouse)
+                if (!window.matchMedia('(pointer: fine)').matches) {
+                    return;
+                }
+
+                window.addEventListener('mousemove', (e) => {
+                    // Get mouse position relative to center of screen (for parallax)
+                    const x = e.clientX - window.innerWidth / 2;
+                    const y = e.clientY - window.innerHeight / 2;
+                    document.body.style.setProperty('--mouse-x', x);
+                    document.body.style.setProperty('--mouse-y', y);
+                    
+                    // Get cursor position in pixels (for old cursor light)
+                    document.body.style.setProperty('--cursor-x', e.clientX + 'px');
+                    document.body.style.setProperty('--cursor-y', e.clientY + 'px');
+
+                    // NEW: Get cursor position in percentage (for new Part 3.2 light)
+                    const x_pct = (e.clientX / window.innerWidth) * 100;
+                    const y_pct = (e.clientY / window.innerHeight) * 100;
+                    document.body.style.setProperty('--mouse-x-pct', `${x_pct}%`);
+                    document.body.style.setProperty('--mouse-y-pct', `${y_pct}%`);
+                });
+            };
+
+            // --- P4: "Cinematic Flow" Scroll Animations ---
+            const initScrollAnimations = () => {
+                const animatedElements = document.querySelectorAll('.fade-in-up');
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            // Stop observing once it's visible
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.1 // Trigger when 10% of the element is visible
+                });
+
+                animatedElements.forEach(el => {
+                    observer.observe(el);
+                });
+                
+                // NEW: Part 6.1 - Image loading class
+                const imageElements = document.querySelectorAll('.project-image');
+                const imageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.addEventListener('load', () => {
+                                entry.target.classList.remove('animate-pulse');
+                            }, { once: true });
+                            imageObserver.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.1
+                });
+                imageElements.forEach(el => {
+                    imageObserver.observe(el);
+                });
+            };
+
+            // --- NEW: Scroll Interaction for Background ---
+            const initScrollInteraction = () => {
+                window.addEventListener('scroll', () => {
+                    // Update a CSS variable with the scroll position
+                    document.body.style.setProperty('--scroll-y', window.scrollY);
+                }, { passive: true }); // Performance optimization
+            };
+
+            // --- NEW: Click Ripple Interaction ---
+            const initClickRipple = () => {
+                const rippleContainer = document.getElementById('click-ripple-container');
+                document.body.addEventListener('click', (e) => {
+                    // Don't ripple on interactive elements
+                    if (e.target.closest('a, button, .project-card, .modal-content')) {
+                        return;
+                    }
+                    
+                    // NEW: Don't ripple if modal is open
+                    if (modal.classList.contains('is-open')) {
+                        return;
+                    }
+
+                    const ripple = document.createElement('div');
+                    ripple.className = 'ripple';
+                    ripple.style.width = ripple.style.height = '50px';
+                    // Center the ripple on the cursor
+                    ripple.style.left = (e.clientX - 25) + 'px';
+                    ripple.style.top = (e.clientY - 25) + 'px';
+                    
+                    rippleContainer.appendChild(ripple);
+
+                    // Clean up the ripple element after the animation
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600); // Must match animation duration
+                });
+            };
+
+
+            // --- Initialize everything ---
+            initTheme(); // <-- NEW: Run theme logic on load
+            initMouseParallax();
+            initScrollAnimations();
+            initScrollInteraction(); // Initialize new scroll interaction
+            initClickRipple(); // Initialize new click interaction
+            initFileCabinet(); // <-- NEW: Initialize file cabinet
+            initFooterYear(); // <-- NEW: Initialize footer year
+            
+            // NEW: Part 6.1 - Hide preloader on window.load
+            const preloader = document.getElementById('preloader');
+            window.addEventListener('load', () => {
+                setTimeout(() => { // Add a tiny delay so it doesn't flash
+                    preloader.style.opacity = '0';
+                    preloader.style.visibility = 'hidden';
+                    setTimeout(() => preloader.remove(), 500); // Remove from DOM
+                }, 300);
+            });
+
+        });
+    </script>
+</body>
+</html>
