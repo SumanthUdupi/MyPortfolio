@@ -21,13 +21,17 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Diagnose Vite permissions
+    - name: Fix Vite permissions and Diagnose
       run: |
-        echo "Listing contents of node_modules/.bin:"
+        echo "Setting execute permissions for vite..."
+        chmod +x node_modules/.bin/vite
+        echo "Adding node_modules/.bin to PATH..."
+        export PATH=$(pwd)/node_modules/.bin:$PATH
+        echo "Listing contents of node_modules/.bin (after chmod):"
         ls -l node_modules/.bin
-        echo "Checking permissions of vite executable:"
+        echo "Checking permissions of vite executable (after chmod):"
         ls -l node_modules/.bin/vite
-        echo "Current PATH:"
+        echo "Current PATH (after modification):"
         echo $PATH
     - name: Build
       run: npm run build
