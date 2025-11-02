@@ -170,6 +170,7 @@ export const caseStudies: { [key: string]: CaseStudy } = {
   'auto-dashboard': {
     id: 'auto-dashboard',
     title: 'Project Vroom',
+    hook: 'Rev Up Your Data: A Real-time Auto Dashboard',
     imageUrl: 'images/auto-dashboard-sweep.gif',
     description: 'A real-time automobile dashboard display for vehicle diagnostics and performance.',
     caseStudy: 'View Case Study →',
