@@ -17,10 +17,6 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudy | null>(null);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000); // Simulate loading time
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
@@ -91,11 +87,7 @@ function App() {
 
   return (
     <>
-      {loading && (
-        <div id="preloader" className="preloader">
-          <p className="font-hand">Sketching...</p>
-        </div>
-      )}
+
       <a href="#main-content" className="skip-to-content">Skip to main content</a>
       <Layout>
         <Header />
