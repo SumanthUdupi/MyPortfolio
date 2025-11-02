@@ -13,7 +13,7 @@ import engineIgnitionSound from '../public/audio/engine-ignition.mp3';
 import f1FlybySound from '../public/audio/f1-flyby.mp3';
 
 function App() {
-  const [loading, setLoading] = useState(true);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudy | null>(null);
 
