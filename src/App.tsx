@@ -8,9 +8,9 @@ import FileCabinet from './components/FileCabinet';
 import Footer from './components/Footer';
 import CaseStudyModal from './components/CaseStudyModal';
 import { caseStudies, CaseStudy } from './data/caseStudies';
-import pokemonCapturedSound from '../public/audio/pokemon-captured.mp3';
-import engineIgnitionSound from '../public/audio/engine-ignition.mp3';
-import f1FlybySound from '../public/audio/f1-flyby.mp3';
+import pokemonCapturedSound from '/audio/pokemon-captured.mp3';
+import engineIgnitionSound from '/audio/engine-ignition.mp3';
+import f1FlybySound from '/audio/f1-flyby.mp3';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
