@@ -237,5 +237,5 @@ export const caseStudies: { [key: string]: CaseStudy } = {
       title: "The Reflection",
       body: "This project was a fantastic blend of my interests in data, development, and Formula 1. It demonstrated how powerful data analysis can be in uncovering hidden narratives and providing deeper understanding, even in a fast-paced, high-stakes environment like F1. It was truly 'lights out and away we go' into a new realm of learning!"
     }
-  },
+  }
 };
