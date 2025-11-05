@@ -148,7 +148,7 @@ export const caseStudies: { [key: string]: CaseStudy } = {
     },
     problem: {
       title: "ACT I: The Problem (Gotta Catch 'Em All... Data)",
-      body: "As a dedicated Pokémon trainer, I found existing Pokedex apps lacked the specific data visualizations, often resulting in <a href='https://archives.f90.dev/cdn/missingno.webp' target='_blank' rel='noopener noreferrer'>Missing</a> data and analysis tools I craved. I wanted a personalized way to explore Pokémon stats, types, and evolutions, beyond just basic entries."
+      body: "As a dedicated Pokémon trainer, I found existing Pokedex apps lacked the specific data visualizations, often resulting in <a href=\"https://upload.wikimedia.org/wikipedia/en/4/4c/Missingno.png\" target=\"_blank\" rel=\"noopener noreferrer\">Missing</a> data and analysis tools I craved. I wanted a personalized way to explore Pokémon stats, types, and evolutions, beyond just basic entries."
     },
     investigation: {
       title: "ACT II: The Process (Into the Tall Grass)",
@@ -207,7 +207,7 @@ export const caseStudies: { [key: string]: CaseStudy } = {
     title: 'DRS (Data Reporting System)',
     category: 'After-Hours Atelier',
     hook: 'It\'s lights out and away we go... to the case study! F1 data analysis.',
-    imageUrl: 'images/auto-dashboard-sweep.gif',
+    imageUrl: 'images/F1-Dashboard.gif',
     description: 'An application for analyzing Formula 1 race data and performance metrics.',
     caseStudy: 'View Case Study →',
     caption: 'It\'s lights out and away we go... to the case study!',

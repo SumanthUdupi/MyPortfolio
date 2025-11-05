@@ -1348,3 +1348,24 @@ nav::after {
 .steam-fast path {
   animation-duration: 1.5s !important; /* 3x faster than original 4.5s */
 }
+
+.dev-mode div {
+  outline: 1px solid red;
+}
+
+.sketchbook-mode {
+  font-family: 'Kalam', cursive !important;
+}
+
+.sketchbook-mode img {
+  filter: grayscale(1) contrast(1.2) brightness(0.9) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="pencil-sketch"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" seed="1" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feDisplacementMap in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter></svg>#pencil-sketch');
+}
+
+.flash-green {
+  animation: flash-green 0.5s;
+}
+
+@keyframes flash-green {
+  0% { background-color: rgba(0, 255, 0, 0.5); }
+  100% { background-color: transparent; }
+}

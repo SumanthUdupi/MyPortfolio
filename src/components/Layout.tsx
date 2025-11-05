@@ -2,6 +2,12 @@ import { useState, useEffect, ReactNode, useRef } from 'react';
 import sneezeSound from '../../public/audio/sneeze.mp3';
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const [isDevMode, setIsDevMode] = useState(false);
+  const [konamiCode, setKonamiCode] = useState<string[]>([]);
+  const [gherkin, setGherkin] = useState<string>("");
+  const [figma, setFigma] = useState<string>("");
+  const [sql, setSql] = useState<string>("");
+  const [pokedex, setPokedex] = useState<string>("");
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -22,6 +28,110 @@ const Layout = ({ children }: { children: ReactNode }) => {
     document.documentElement.style.setProperty('--mouse-x-pct', `${(mousePosition.x / window.innerWidth) * 100}%`);
     document.documentElement.style.setProperty('--mouse-y-pct', `${(mousePosition.y / window.innerHeight) * 100}%`);
   }, [mousePosition]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+
+      // Dev Mode
+      if (key === 'd') {
+        setIsDevMode(true);
+      }
+
+      // Konami Code
+      const konamiSequence = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
+      const newKonamiCode = [...konamiCode, key];
+      if (newKonamiCode.length > konamiSequence.length) {
+        newKonamiCode.shift();
+      }
+      if (JSON.stringify(newKonamiCode) === JSON.stringify(konamiSequence)) {
+        document.body.classList.toggle('sketchbook-mode');
+        setKonamiCode([]);
+      } else {
+        setKonamiCode(newKonamiCode);
+      }
+
+      // Gherkin
+      const gherkinSequence = 'gherkin';
+      const newGherkin = (gherkin + key).slice(-gherkinSequence.length);
+      if (newGherkin === gherkinSequence) {
+        document.body.classList.add('flash-green');
+        setTimeout(() => {
+          document.body.classList.remove('flash-green');
+        }, 500);
+        setGherkin('');
+      } else {
+        setGherkin(newGherkin);
+      }
+
+      // Figma
+      const figmaSequence = 'figma';
+      const newFigma = (figma + key).slice(-figmaSequence.length);
+      if (newFigma === figmaSequence) {
+        const figmaLogo = document.createElement('div');
+        figmaLogo.innerHTML = `<svg width="50" height="50" viewBox="0 0 24 24"><path fill="#f24e1e" d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12z"/><path fill="#fff" d="M12 18a6 6 0 01-6-6h6v6z"/><path fill="#ff7262" d="M12 12a6 6 0 01-6-6h6v6z"/><path fill="#a259ff" d="M12 6a6 6 0 016 6h-6V6z"/><path fill="#1abcfe" d="M18 12a6 6 0 01-6 6v-6h6z"/><path fill="#0acf83" d="M12 12a6 6 0 006-6h-6v6z"/></svg>`;
+        figmaLogo.style.position = 'fixed';
+        figmaLogo.style.bottom = '-50px';
+        figmaLogo.style.left = '50%';
+        figmaLogo.style.transform = 'translateX(-50%)';
+        figmaLogo.style.transition = 'all 1s ease-out';
+        document.body.appendChild(figmaLogo);
+        setTimeout(() => {
+          figmaLogo.style.bottom = '100vh';
+          figmaLogo.style.opacity = '0';
+        }, 100);
+        setTimeout(() => {
+          figmaLogo.remove();
+        }, 1100);
+        setFigma('');
+      } else {
+        setFigma(newFigma);
+      }
+
+      // SQL
+      const sqlSequence = 'sql';
+      const newSql = (sql + key).slice(-sqlSequence.length);
+      if (newSql === sqlSequence) {
+        alert('SELECT * FROM portfolio.visitors WHERE status = \'impressed\';');
+        setSql('');
+      } else {
+        setSql(newSql);
+      }
+
+      // Pokedex
+      const pokedexSequence = 'pokedex';
+      const newPokedex = (pokedex + key).slice(-pokedexSequence.length);
+      if (newPokedex === pokedexSequence) {
+        const audio = new Audio('/audio/pokemon-who.mp3');
+        audio.play();
+        setPokedex('');
+      } else {
+        setPokedex(newPokedex);
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === 'd') {
+        setIsDevMode(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [konamiCode, gherkin, figma, sql, pokedex]);
+
+  useEffect(() => {
+    if (isDevMode) {
+      document.body.classList.add('dev-mode');
+    } else {
+      document.body.classList.remove('dev-mode');
+    }
+  }, [isDevMode]);
 
   const [inkSplotchPosition, setInkSplotchPosition] = useState({ x: 0, y: 0 });
   const [isDraggingInkSplotch, setIsDraggingInkSplotch] = useState(false);
