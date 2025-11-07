@@ -1,0 +1,31 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Kalam&display=swap');
+
+.sketchbook-mode {
+  font-family: 'Kalam', cursive;
+}
+
+.sketchbook-mode img {
+  filter: grayscale(80%) contrast(120%);
+  border: 1px solid #000;
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+}
+
+.gherkin-flash {
+  background-color: #4CAF50;
+  transition: background-color 0.5s ease;
+}
+
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 15px 25px;
+  border-radius: 5px;
+  z-index: 1000;
+  font-family: monospace;
+  font-size: 16px;
+}

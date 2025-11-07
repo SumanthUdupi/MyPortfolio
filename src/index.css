@@ -1348,18 +1348,82 @@ nav::after {
 .steam-fast path {
   animation-duration: 1.5s !important; /* 3x faster than original 4.5s */
 }
+/* Easter Egg Styles */
+.sketchbook-mode * {
+  font-family: 'Kalam', cursive !important;
+}
+
+.sketchbook-mode img, .sketchbook-mode .project-image {
+  filter: grayscale(1) contrast(1.2) brightness(1.1) !important;
+  -webkit-filter: grayscale(1) contrast(1.2) brightness(1.1) !important;
+  border: 2px solid #333;
+  padding: 4px;
+  background: white;
+  box-shadow: 0 0 0 1px #333;
+}
+
+.sketchbook-mode body {
+    background-color: #f0e8d8 !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='%23d2c8b8' fill-opacity='0.2'%3E%3Crect x='0' y='0' width='100' height='1px'/%3E%3Crect x='0' y='0' width='1px' height='100'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+
+
+.gherkin-flash {
+  animation: flash-green 0.5s ease-in-out;
+}
+
+@keyframes flash-green {
+  0% { background-color: rgba(76, 175, 80, 0); }
+  50% { background-color: rgba(76, 175, 80, 0.3); }
+  100% { background-color: rgba(76, 175, 80, 0); }
+}
+
+.figma-logo-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 300px;
+  z-index: 9999;
+  animation: float-figma 4s ease-in-out forwards;
+  pointer-events: none;
+}
+
+.figma-logo {
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='300' viewBox='0 0 64 96' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M32 64C49.6731 64 64 49.6731 64 32C64 14.3269 49.6731 0 32 0C14.3269 0 0 14.3269 0 32C0 49.6731 14.3269 64 32 64Z' fill='%23F24E1E'/%3E%3Cpath d='M32 96C49.6731 96 64 81.6731 64 64C64 46.3269 49.6731 32 32 32C14.3269 32 0 46.3269 0 64C0 81.6731 14.3269 96 32 96Z' fill='%23FF7262'/%3E%3Cpath d='M32 64C49.6731 64 64 49.6731 64 32C64 14.3269 49.6731 0 32 0V32C32 49.6731 17.6731 64 0 64C14.3269 64 32 64 32 64Z' fill='%23A259FF'/%3E%3Cpath d='M0 32C0 49.6731 14.3269 64 32 64V32C14.3269 32 0 17.6731 0 0V32Z' fill='%231ABCFE'/%3E%3Cpath d='M0 32C17.6731 32 32 17.6731 32 0C32 17.6731 46.3269 32 64 32C46.3269 32 32 46.3269 32 64C32 46.3269 17.6731 32 0 32Z' fill='%230ACF83'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+@keyframes float-figma {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  25% {
+    transform: translate(-50%, -60%) scale(1);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(-50%, -40%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, 100%) scale(0.5);
+    opacity: 0;
+  }
+}
 
 .dev-mode div {
   outline: 1px solid red;
 }
 
-.sketchbook-mode {
-  font-family: 'Kalam', cursive !important;
-}
 
-.sketchbook-mode img {
-  filter: grayscale(1) contrast(1.2) brightness(0.9) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="pencil-sketch"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" seed="1" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feDisplacementMap in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter></svg>#pencil-sketch');
-}
 
 .flash-green {
   animation: flash-green 0.5s;

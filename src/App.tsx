@@ -7,42 +7,20 @@ import About from './components/About';
 import FileCabinet from './components/FileCabinet';
 import Footer from './components/Footer';
 import CaseStudyModal from './components/CaseStudyModal';
+import Toast from './components/Toast';
 import { caseStudies, CaseStudy } from './data/caseStudies';
 import pokemonCapturedSound from '/audio/pokemon-captured.mp3';
 import engineIgnitionSound from '/audio/engine-ignition.mp3';
 import f1FlybySound from '/audio/f1-flyby.mp3';
+import { useEasterEggs } from './hooks/useEasterEggs';
+import Draggable from './components/Draggable';
+import './style.css';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudy | null>(null);
 
-  useEffect(() => {
-    console.log("🎮 Secret Portfolio Easter Eggs - Riddle Edition");
-    console.log("10 hidden treasures await. Can you crack the codes?");
-    console.log("1. The Gamer's Salute: Arrow keys dance up, up, down, down, left, right, left, right, then two letters close the spell. What code from the 80s turns this portfolio into a hand-drawn tale?");
-    console.log("2. The Pickle's Flash: A testing framework's name, green and crunchy. Type it out and watch the screen get... lunchy?");
-    console.log("3. The Designer's Balloon: Where UI dreams are made, five letters spell the tool. Type its name and watch a logo float—think it's cool?");
-    console.log("4. The Data Wizard's Query: Three letters that pull data from tables with care. Type them fast for a popup that queries \"impressed\" visitors there.");
-    console.log("5. Gotta Type 'Em All: Seven letters, a digital encyclopedia of pocket monsters. Say it aloud and hear \"Who's that...?\" from your computer's speakers.");
-    console.log("6. The Console Welcomer: Open the developer's secret chamber (F12). A message awaits: \"Welcome, fellow analyst!\" it says with a wink chamber.");
-    console.log("7. The ASCII Artist: In the same hidden console, a caffeinated drawing appears—or perhaps a writing tool. Made of symbols and characters, never pixels, always cool.");
-    console.log(`
-          ( (
-         ) )
-      .........
-      |       |]
-      \       /
-       \`-----\`
-    `);
-    console.log("8. The Hiring Function: Still in console-land, a function beckons with 6 letters and 2 humps in its name. Call upon it to send an email of career-seeking fame.");
-    console.log("Type hireMe() to get in touch.");
-    (window as any).hireMe = () => { window.location.href = 'mailto:sumanthudupi858@gmail.com?subject=I found your console Easter Egg!'; };
-    console.log("9. The Sleepy Roadblock: Check the console again—a wild creature blocks your way! This lazy Pokémon in the code decided to stay.");
-    console.log("A wild Snorlax blocks the path! (Just kidding, it's just my code.)");
-    console.log("10. The Developer's X-Ray: Hold a single letter key (the one that starts \"developer\"). Red outlines reveal the skeleton of every container, whatever the weather.");
-    console.log("How many can you find? Happy hunting! 🕵️");
-  }, []);
-
+  const { toastMessage, setToastMessage, figmaVisible, isSketchbookModeActive, sketchbookBadgeVisible } = useEasterEggs();
 
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
@@ -114,6 +92,16 @@ function App() {
 
   return (
     <>
+      {figmaVisible && (
+        <div className="figma-logo-container">
+          <div className="figma-logo"></div>
+        </div>
+      )}
+      {sketchbookBadgeVisible && (
+        <div className="fixed bottom-4 right-4 bg-yellow-300 text-yellow-900 px-3 py-1 rounded-full shadow-lg text-sm font-bold z-[1000]">
+          Sketchbook Mode Active!
+        </div>
+      )}
       <a href="#main-content" className="skip-to-content">Skip to main content</a>
       <Layout>
         <Header />
@@ -121,10 +109,17 @@ function App() {
         <ProjectSection title="After-Hours Atelier" projects={personalProjects} onProjectClick={handleProjectClick} />
         <ProjectSection title="Professional Case Studies" projects={professionalProjects} onProjectClick={handleProjectClick} />
         <About />
-        <FileCabinet />
+        {isSketchbookModeActive ? (
+          <Draggable initialStyle={{ top: '50px', left: '50px', zIndex: 1000 }}>
+            <FileCabinet />
+          </Draggable>
+        ) : (
+          <FileCabinet />
+        )}
         <Footer />
       </Layout>
       <CaseStudyModal isOpen={isModalOpen} onClose={handleCloseModal} caseStudy={selectedCaseStudy} />
+      {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
     </>
   );
 }

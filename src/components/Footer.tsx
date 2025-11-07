@@ -24,6 +24,13 @@ const Footer = () => {
       </div>
       <p>Designed and built with 🎨, ☕, and a few metaphors.</p>
       <p>&copy; {currentYear} Sumanth Udupi. All rights reserved.</p>
+      <div 
+        className="mt-4 text-xs text-stone-400 dark:text-stone-600 cursor-pointer hover:text-stone-600 dark:hover:text-stone-400 transition-colors duration-200"
+        onClick={() => (window as any).help && (window as any).help()}
+        title="Psst... A secret quest awaits!"
+      >
+        Found a secret?
+      </div>
     </footer>
   );
 };
