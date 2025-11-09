@@ -14,9 +14,9 @@ const Modal: React.FC<ModalProps> = ({ isModalOpen, closeModal, currentProject, 
   }
 
   return (
-    <div id="modal" className={`modal modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 ${isModalOpen ? 'is-open' : 'invisible opacity-0'}`} aria-modal="true" role="dialog">
-        <div className={`modal-content paper relative max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-lg shadow-2xl ${isModalOpen ? 'is-open' : ''}`}>
-            <button id="close-modal" className="modal-close-button absolute top-4 right-4 text-stone-400 z-10" aria-label="Close case study" onClick={closeModal}>
+    <div id="modal" className={`modal modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 ${isModalOpen ? 'is-open' : 'invisible opacity-0'}`} aria-modal="true" role="dialog" onClick={closeModal}>
+        <div className={`modal-content paper relative max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-lg shadow-2xl ${isModalOpen ? 'is-open' : ''}`} onClick={(e) => e.stopPropagation()}>
+            <button id="close-modal" className="modal-close-button absolute top-4 right-4 text-stone-400 z-10" aria-label="Close case study" onClick={closeModal} onTouchStart={(e) => e.preventDefault()}>
                 X
             </button>
             

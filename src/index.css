@@ -1,6 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat&family=Dancing+Script&family=Gochi+Hand&family=Kalam&family=Patrick+Hand&family=Sacramento&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --font-heading-hero: 'Kalam', cursive;
+  --font-heading-h2: 'Kalam', cursive;
+  --font-heading-h3: 'Kalam', cursive;
+}
+
+/* Base HTML font size for rem units */
+html {
+  font-size: 16px; /* Base for rem units */
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem; /* Mobile Body */
+  line-height: 1.6; /* Updated for readability */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+  font-family: var(--font-heading-hero);
+  font-size: 2.8rem; /* Mobile H1 */
+  line-height: 1.2; /* Updated */
+  letter-spacing: -0.05em; /* Updated */
+  font-weight: 400;
+}
+
+h2 {
+  font-family: var(--font-heading-h2);
+  font-size: 1.8rem; /* Mobile H2 */
+  line-height: 1.2; /* Updated */
+  letter-spacing: -0.02em; /* Updated */
+  font-weight: 400;
+}
+
+h3 {
+  font-family: var(--font-heading-h3);
+  font-size: 1.2rem; /* Mobile H3 */
+  line-height: 1.2; /* Updated */
+  letter-spacing: normal; /* Updated */
+  font-weight: 400;
+}
+
+p {
+  font-family: var(--font-body);
+  font-size: 1rem; /* Mobile Body */
+  line-height: 1.6; /* Updated */
+}
+
+a, button {
+  font-family: var(--font-heading-h3); /* Using Patrick Hand for navigation/buttons */
+  font-weight: 400; /* Patrick Hand typically has one weight */
+  font-size: 1rem; /* Mobile Nav/Buttons */
+  line-height: 1.4; /* Updated */
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+  body {
+    font-size: 1.125rem; /* Desktop Body */
+  }
+
+  h1 {
+    font-size: 4.5rem; /* Desktop H1 */
+  }
+
+  h2 {
+    font-size: 2.5rem; /* Desktop H2 */
+  }
+
+  h3 {
+    font-size: 1.5rem; /* Desktop H3 */
+  }
+
+  p {
+    font-size: 1.125rem; /* Desktop Body */
+  }
+
+  a, button {
+    font-size: 1.125rem; /* Desktop Nav/Buttons */
+  }
+}
 
 /* * Custom styles to bring the "Creative Manifesto" v3.0 to life.
  * We're defining our font families and creating the
@@ -30,13 +116,16 @@
 }
 
 /* 1. Typography as Character */
-.font-body { font-family: 'Inter', sans-serif; }
-.font-display { font-family: 'Playfair Display', serif; }
-.font-hand { font-family: 'Kalam', cursive; }
-.font-mono { font-family: 'IBM Plex Mono', monospace; }
+.font-body { font-family: var(--font-body); }
+.font-display { font-family: 'Kalam', cursive; }
+.font-hand { font-family: 'Patrick Hand', cursive; }
+.font-mono { font-family: 'Patrick Hand', cursive; }
+.font-dancing { font-family: 'Dancing Script', cursive; }
+.font-gochi { font-family: 'Gochi Hand', cursive; }
 
 /* 2. The "Sticky Note" (for the Hero) - UPDATED Part 1.1 */
 .sticky-note {
+    font-family: 'Caveat', cursive;
     /* background-color: #fef9c3; /* bg-yellow-100 */
     /* box-shadow: 0 4px 10px rgba(0,0,0,0.1); */
     transform: rotate(2deg);
@@ -56,14 +145,14 @@
 .sticky-note {
     /* We use CSS vars for smooth parallax. JS will update --mouse-x/y */
     /* UPDATED: Parallax cut by 75% */
-    transform: rotate(2deg) translate(calc(var(--mouse-x, 0) * -0.005px), calc(var(--mouse-y, 0) * -0.005px));
+    transform: rotate(2deg);
     transition: transform 0.1s linear, box-shadow 0.3s ease;
 }
 
 .sticky-note:hover {
     /* Combine hover effects with parallax variables */
     /* UPDATED: Parallax cut by 75% */
-    transform: rotate(0deg) scale(1.05) translate(calc(var(--mouse-x, 0) * -0.005px), calc(var(--mouse-y, 0) * -0.005px));
+    transform: rotate(0deg) scale(1.05);
     box-shadow: 0 8px 15px rgba(0,0,0,0.15);
     z-index: 10;
 }
@@ -75,60 +164,17 @@
 }
 
 /* 4. The "Polaroid" Project Card - UPDATED Part 4.1 (Physics) & 3.4 (Look) */
-.project-card {
-    /* transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); */ /* REPLACED */
-    box-shadow: var(--shadow-proximity);
-    /* NEW: Part 4.1 */
-    transform-origin: top center; /* Pinned by tape at top */
-    transition: 
-        transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), /* Bounce */
-        box-shadow 0.3s ease;
-    /* Assign individual rotations */
-    --card-rotation: 0deg;
-}
 .project-card:nth-child(1) { --card-rotation: 1deg; }
 .project-card:nth-child(2) { --card-rotation: -0.5deg; }
 .project-card:nth-child(3) { --card-rotation: 0.8deg; }
 
 
 /* 4b. Add parallax movement to project cards */
-.project-card {
-    transform: 
-        /* UPDATED: Parallax cut by 75% */
-        translate(calc(var(--mouse-x, 0) * 0.002px), calc(var(--mouse-y, 0) * 0.002px))
-        rotate(var(--card-rotation));
-    /* transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); */ /* REPLACED */
-}
 
 /* 4c. Combine hover with parallax - UPDATED Part 4.1 */
-.project-card:hover {
-    /* transform: scale(1.03) rotate(1deg) translate(calc(var(--mouse-x, 0) * 0.005px), calc(var(--mouse-y, 0) * 0.005px)); */ /* REPLACED */
-    transform: 
-        rotate(var(--card-rotation, 0deg))
-        scale(1.03)
-        translateY(-8px)
-        /* rotate(calc(var(--card-rotation, 0deg) * 1.5)) */ /* Simplified for stability */
-        /* UPDATED: Parallax cut by 75% */
-        translate(calc(var(--mouse-x, 0) * 0.002px), calc(var(--mouse-y, 0) * 0.002px));
-    z-index: 5;
-    box-shadow: var(--shadow-elevated); /* NEW shadow */
-}
 
 /* NEW: Part 3.4 - Polaroid Film Look */
-.project-card .paper {
-    /* UPDATED: Removed washi tape, so enhance shadow */
-    border: 12px solid #f5f5f5;
-    border-bottom: 48px solid #f5f5f5;
-    box-shadow: 
-        0 4px 12px rgba(0,0,0,0.15), /* Enhanced shadow */
-        inset 0 0 0 1px rgba(0,0,0,0.05);
-    position: relative;
-}
 /* NEW: Dark Mode Polaroid Paper */
-.dark .project-card .paper {
-    border-color: #292524; /* stone-800 */
-    background: #292524;
-}
 
 .project-card .project-image {
     width: 100%;
@@ -163,8 +209,7 @@
     bottom: -36px;
     left: 0;
     right: 0;
-    text-align: center;
-    font-family: 'Kalam', cursive;
+    font-family: 'Patrick Hand', cursive;
     font-size: 0.9rem;
     color: #57534e;
     /* NEW: Ink bleed shadow */
@@ -178,25 +223,17 @@
 
 /* 5. The "Paper" (for About Me & Modal) - UPDATED Part 1.1 & 3.1 */
 .paper {
-    /* background-color: white; */
-    /* box-shadow: 0 10px 20px rgba(0,0,0,0.08); */
-    background-color: #fcfcfc; /* Slightly off-white */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.05'/%3E%3C/svg%3E");
-    background-blend-mode: multiply;
-    box-shadow: var(--shadow-elevated); /* NEW shadow */
-    border-radius: 3px;
+    background-color: #f5f5f4; /* stone-100 */
+}
+.dark .paper {
+    background-color: #44403c; /* stone-700 */
 }
 /* NEW: Dark Mode Paper */
-.dark .paper {
-    /* UPDATED: Better contrast */
-    background-color: #44403c; /* stone-700 */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.1'/%3E%3C/svg%3E");
-}
 
 /* 5b. Add parallax to "About Me" paper */
 #about .paper {
     /* UPDATED: Parallax cut by 75% */
-    transform: rotate(-1deg) translate(calc(var(--mouse-x, 0) * 0.003px), calc(var(--mouse-y, 0) * 0.003px));
+    transform: rotate(-1deg);
     transition: transform 0.1s linear;
 }
 
@@ -212,8 +249,8 @@
 .modal-overlay { /* NEW class for overlay */
   background: linear-gradient(
     135deg,
-    rgba(41,37,36,0.85) 0%,
-    rgba(28,25,23,0.90) 100%
+    rgba(41,37,36,0.95) 0%,
+    rgba(28,25,23,0.98) 100%
   );
   backdrop-filter: blur(8px) saturate(0.8);
   -webkit-backdrop-filter: blur(8px) saturate(0.8);
@@ -272,6 +309,49 @@
     transform: translateY(0);
 }
 
+/* Mobile performance optimizations */
+@media (max-width: 767px) {
+    .fade-in-up {
+        /* Reduce animation duration on mobile */
+        transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        /* Reduce movement distance for smoother performance */
+        transform: translateY(20px);
+    }
+    .fade-in-up.is-visible {
+        transform: translateY(0);
+    }
+
+    /* Disable complex hover animations on mobile */
+    .project-card:hover {
+        transform: rotate(var(--card-rotation)) scale(1.02);
+        box-shadow: var(--shadow-proximity);
+    }
+
+    /* Reduce parallax effects on mobile for better performance */
+    .sticky-note,
+    .project-card,
+    #bg-texture,
+    .bg-item {
+        transform: none !important;
+        transition: none !important;
+    }
+
+    /* Disable background animations on mobile */
+    .dust-mote {
+        animation: none;
+    }
+
+    /* Reduce flutter animation frequency */
+    @keyframes flutter {
+        0% { transform: rotate(1deg); }
+        50% { transform: rotate(-0.5deg); }
+        100% { transform: rotate(1deg); }
+    }
+    .sticky-note {
+        animation: flutter 20s infinite ease-in-out;
+    }
+}
+
 /* 9. Interactive Background Layers */
 #bg-layers {
     position: fixed;
@@ -306,7 +386,6 @@
     inset: 0;
     /* Parallax: Layer 3 (Deepest) */
     /* UPDATED: Parallax cut by 75% */
-    transform: translate(calc(var(--mouse-x, 0) * 0.002px), calc(var(--mouse-y, 0) * 0.002px));
     transition: transform 0.1s linear;
 }
 /* NEW: Dark Mode Desk Texture */
@@ -346,7 +425,6 @@
     /* Parallax: Moves a bit. Scroll: Rotates. */
     /* UPDATED: Parallax cut by 75% */
     transform: 
-        translate(calc(var(--mouse-x, 0) * 0.005px), calc(var(--mouse-y, 0) * 0.005px))
         rotate(calc(var(--scroll-y, 0) * 0.05deg));
 }
 /* NEW: Dark Mode Coffee Ring */
@@ -370,7 +448,6 @@
     /* Parallax: Layer 5 */
     /* UPDATED: Parallax cut by 75% */
     transform: 
-        translate(calc(var(--mouse-x, 0) * 0.006px), calc(var(--mouse-y, 0) * 0.006px))
         rotate(calc(var(--scroll-y, 0) * 0.02deg));
 }
 /* NEW: Dark Mode Sketchbook */
@@ -396,7 +473,6 @@
     /* Parallax: Layer 6 (On top of sketchbook) */
     /* UPDATED: Parallax cut by 75% */
     transform: 
-        translate(calc(var(--mouse-x, 0) * 0.007px), calc(var(--mouse-y, 0) * 0.007px))
         rotate(calc(var(--scroll-y, 0) * -0.01deg));
 }
 /* NEW: Dark Mode Pen */
@@ -416,7 +492,6 @@
     /* Parallax: Layer 2 (Deep Background) */
     /* UPDATED: Parallax cut by 75% */
     transform: 
-        translate(calc(var(--mouse-x, 0) * 0.003px), calc(var(--mouse-y, 0) * 0.003px))
         rotate(-30deg);
     /* UPDATED: Slower sway */
     animation: sway 20s infinite ease-in-out;
@@ -440,8 +515,6 @@
     pointer-events: none;
     /* Parallax: Moves with coffee ring */
     /* UPDATED: Parallax cut by 75% */
-    transform: 
-        translate(calc(var(--mouse-x, 0) * 0.005px), calc(var(--mouse-y, 0) * 0.005px));
 }
 /* NEW: Dark Mode Steam */
 .dark #coffee-steam path {
@@ -520,9 +593,9 @@
 /* Ambient Animation (Sway) */
 @keyframes sway {
     /* UPDATED: Slower, more subtle sway */
-    0% { transform: rotate(-30.5deg) translate(calc(var(--mouse-x, 0) * 0.003px), calc(var(--mouse-y, 0) * 0.003px)); }
-    50% { transform: rotate(-29.5deg) translate(calc(var(--mouse-x, 0) * 0.003px), calc(var(--mouse-y, 0) * 0.003px)); }
-    100% { transform: rotate(-30.5deg) translate(calc(var(--mouse-x, 0) * 0.003px), calc(var(--mouse-y, 0) * 0.003px)); }
+    0% { transform: rotate(-30.5deg); }
+    50% { transform: rotate(-29.5deg); }
+    100% { transform: rotate(-30.5deg); }
 }
 
 /* 12. Click Ripple Effect */
@@ -583,7 +656,7 @@
     /* UPDATED: More subtle */
     opacity: 0.1;
     /* UPDATED: Parallax cut */
-    transform: rotate(-15deg) translate(calc(var(--mouse-x, 0) * 0.004px), calc(var(--mouse-y, 0) * 0.004px));
+    transform: rotate(-15deg);
 }
 /* NEW: Dark Mode Imperfections */
 .dark #ink-splotch {
@@ -600,7 +673,6 @@
     /* UPDATED: More subtle */
     opacity: 0.15;
     /* UPDATED: Parallax cut */
-    transform: translate(calc(var(--mouse-x, 0) * 0.007px), calc(var(--mouse-y, 0) * 0.007px));
 }
 .dark #eraser-shavings {
     opacity: 0.3;
@@ -616,7 +688,6 @@
     /* UPDATED: More subtle */
     opacity: 0.05;
     /* UPDATED: Parallax cut */
-    transform: translate(calc(var(--mouse-x, 0) * 0.004px), calc(var(--mouse-y, 0) * 0.004px));
 }
 .dark #pencil-scribble path {
     stroke: #a8a29e;
@@ -624,106 +695,7 @@
     opacity: 0.1;
 }
 
-/* NEW: Part 3.2 Dynamic Lighting Effects */
-/* Replaces #cursor-light div */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 999;
-  
-  /* Warm ambient glow from cursor */
-  background: radial-gradient(
-    circle 600px at var(--mouse-x-pct, 50%) var(--mouse-y-pct, 50%),
-    rgba(255,247,237,0.06) 0%,
-    rgba(255,237,213,0.03) 40%,
-    transparent 70%
-  );
-  
-  mix-blend-mode: screen;
-  transition: opacity 0.3s ease;
-}
-/* NEW: Dark Mode Cursor Light */
-.dark body::before {
-    /* Tone down the warm light */
-    background: radial-gradient(
-        circle 600px at var(--mouse-x-pct, 50%) var(--mouse-y-pct, 50%),
-        rgba(255,247,237,0.03) 0%,
-        rgba(255,237,213,0.01) 40%,
-        transparent 70%
-    );
-}
 
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 998;
-  
-  /* Cool monitor glow variation */
-  background: radial-gradient(
-    circle 400px at var(--mouse-x-pct, 50%) var(--mouse-y-pct, 50%),
-    rgba(191,219,254,0.04) 0%,
-    rgba(147,197,253,0.02) 50%,
-    transparent 100%
-  );
-  
-  mix-blend-mode: screen;
-  animation: ambient-pulse 8s ease-in-out infinite;
-}
-/* NEW: Dark Mode Cursor Light */
-.dark body::after {
-    /* Enhance the cool "monitor" glow */
-    background: radial-gradient(
-        circle 400px at var(--mouse-x-pct, 50%) var(--mouse-y-pct, 50%),
-        rgba(191,219,254,0.08) 0%,
-        rgba(147,197,253,0.05) 50%,
-        transparent 100%
-    );
-}
-
-@keyframes ambient-pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-/* NEW: Part 3.4 - Vignette & Atmospheric Depth */
-#vignette-overlay {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: 1;
-    box-shadow: inset 0 0 200px rgba(0,0,0,0.08);
-    background: linear-gradient(
-        180deg,
-        rgba(255,255,255,0.02) 0%,
-        transparent 30%,
-        transparent 70%,
-        rgba(0,0,0,0.03) 100%
-    );
-}
-/* NEW: Dark Mode "Desk Lamp" Vignette */
-.dark #vignette-overlay {
-    background: radial-gradient(
-        circle 1000px at 50% 0%,
-        transparent 0%,
-        rgba(0,0,0,0.4) 50%,
-        rgba(0,0,0,0.8) 100%
-    );
-    box-shadow: none;
-}
 
 /* UPDATED: Part 2.1 - Signature Header */
 .header-name h2 {
@@ -794,6 +766,10 @@ body::after {
 /* NEW: Part 2.2 - CV Button Jiggle */
 .cv-button {
   transition: all 0.3s ease;
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 /* NEW: Dark Mode CV Button */
 .dark .cv-button {
@@ -836,7 +812,7 @@ body::after {
 
 /* NEW: Part 2.3 - Dymo Label Toolkit Tags */
 .toolkit-tag {
-  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-family: monospace;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -846,12 +822,17 @@ body::after {
   color: #2c2c2c;
   border: 1px solid #c0c0c0;
   border-radius: 3px;
-  box-shadow: 
+  box-shadow:
     0 1px 2px rgba(0,0,0,0.1),
     inset 0 1px 0 rgba(255,255,255,0.5);
   position: relative;
   /* NEW: Embossed text */
   text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 /* NEW: Dark Mode Toolkit Tag */
 .dark .toolkit-tag {
@@ -930,7 +911,7 @@ body::after {
   line-height: 0.8;
   float: left;
   margin: 0.1em 0.1em 0 0;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading-hero);
   /* UPDATED: Gold drop cap */
   color: #b45309; /* amber-700 */
 }
@@ -941,7 +922,7 @@ body::after {
 
 /* NEW: Part 2.4 - Handwritten Section Headers */
 .about-section-header {
-  font-family: 'Kalam', 'Caveat', cursive;
+  font-family: 'Patrick Hand', cursive;
   font-size: 1.8rem;
   font-weight: 700;
   color: #292524;
@@ -964,7 +945,7 @@ body::after {
 
 /* NEW: Part 2.5 - Handwritten Close Button */
 .modal-close-button {
-  font-family: 'Kalam', cursive;
+  font-family: 'Patrick Hand', cursive;
   font-size: 2.5rem;
   font-weight: 400;
   color: #57534e;
@@ -975,11 +956,111 @@ body::after {
   transition: all 0.3s ease;
   line-height: 1;
   padding: 0;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Mobile touch improvements */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  position: relative;
+  z-index: 10;
+}
+
+/* Mobile modal improvements */
+@media (max-width: 767px) {
+  .modal-content {
+    width: 100%;
+    height: 100%;
+    max-height: 100vh !important;
+    border-radius: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .modal-overlay {
+    padding: 0;
+  }
+
+  .modal-close-button {
+    font-size: 2.5rem; /* Adjusted from 3rem */
+    top: 0.5rem; /* Adjusted from 1rem */
+    right: 0.5rem; /* Adjusted from 1rem */
+    transform: none; /* Removed rotation */
+  }
+
+  .modal-content.paper {
+    padding: 1rem; /* Adjusted from 1.5rem */
+  }
+
+  .modal-content .p-8.md\\:p-12 {
+    padding: 1rem !important; /* Adjusted from 1.5rem */
+  }
+
+  .modal-content h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .modal-content p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .modal-content .grid {
+    gap: 1rem;
+  }
+
+  .modal-content .grid > div {
+    padding: 1rem;
+  }
+
+  .modal-content .prose {
+    font-size: 0.95rem;
+  }
+
+  .modal-content .prose h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Mobile About section optimizations */
+  .toolkit-tag {
+    font-size: 0.6rem;
+    padding: 3px 8px 3px 10px;
+    letter-spacing: 0.05em;
+  }
+
+  .about-section-header {
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Reduce gap between toolkit tags on mobile */
+  .flex.flex-wrap.gap-3.mt-2 {
+    gap: 0.5rem;
+  }
+
+  /* Improve spacing for About section content */
+  .prose-manifesto p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1.25em;
+  }
+
+  .prose-manifesto p:first-of-type {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  /* Adjust paper padding for mobile About section */
+  #about .paper {
+    padding: 1.5rem;
+  }
 }
 /* NEW: Dark Mode Close Button */
 .dark .modal-close-button {
@@ -1018,7 +1099,7 @@ body::after {
 /* NEW: Quirky Electrical Switch */
 .light-switch {
   width: 60px;
-  height: 30px;
+  height: 44px;
   background-color: #44403c; /* stone-600 */
   border: 2px solid #1c1917; /* stone-900 */
   border-radius: 4px;
@@ -1026,6 +1107,8 @@ body::after {
   cursor: pointer;
   transition: background-color 0.3s ease;
   box-shadow: 0 2px 0 #1c1917, 0 3px 5px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.1);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .dark .light-switch {
   background-color: #e5e5e5; /* neutral-200 */
@@ -1034,7 +1117,7 @@ body::after {
 }
 .lever {
   width: 20px;
-  height: 20px;
+  height: 36px;
   background: linear-gradient(135deg, #f5f5f4 0%, #d6d3d1 100%); /* stone-100 to stone-300 */
   border: 1px solid #a8a29e; /* stone-400 */
   box-shadow: 0 1px 2px rgba(0,0,0,0.2);
@@ -1042,7 +1125,7 @@ body::after {
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .dark .lever {
-  transform: translateX(30px); /* (60 - 8 - 20) = 32px. 30px looks better */
+  transform: translateX(30px); /* (60 - 8 - 36) = 16px. 30px looks better */
   background: linear-gradient(135deg, #78716c 0%, #57534e 100%); /* stone-400 to stone-500 */
     border-color: #44403c; /* stone-600 */
 }
@@ -1059,9 +1142,46 @@ body::after {
 .dark .file-tabs {
     border-bottom-color: #44403c; /* stone-600 */
 }
+
+/* Mobile-first enhancements for tabs */
+@media (max-width: 767px) {
+  .file-tabs-container {
+    margin: 0 -1.5rem;
+    border-bottom: 2px solid #e7e5e4; /* stone-200 */
+  }
+
+  .dark .file-tabs-container {
+    border-bottom-color: #44403c; /* stone-600 */
+  }
+
+  .file-tabs {
+    flex-direction: column;
+    align-items: stretch;
+    margin: 0;
+    padding: 0;
+    border-bottom: none;
+  }
+
+  .tab-button {
+    margin-right: 0;
+    margin-bottom: 0;
+    border-radius: 0;
+    border-bottom: 1px solid #e7e5e4;
+    transform: none;
+  }
+
+  .dark .tab-button {
+    border-bottom-color: #57534e;
+  }
+
+  .tab-button.active {
+    transform: none;
+  }
+}
+
 .tab-button {
     padding: 8px 16px;
-    font-family: 'Kalam', cursive;
+    font-family: 'Patrick Hand', cursive;
     font-size: 1.25rem;
     color: #78716c; /* stone-400 */
     background: #f5f5f4; /* stone-100 */
@@ -1069,10 +1189,15 @@ body::after {
     border-bottom: none;
     border-radius: 8px 8px 0 0;
     margin-right: 8px;
-    margin-bottom: -2px; /* Sits on top of the border */
     cursor: pointer;
     transition: all 0.3s ease;
     transform: translateY(4px) rotate(-1deg);
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 .dark .tab-button {
     color: #a8a29e; /* stone-400 */
@@ -1115,7 +1240,7 @@ body::after {
 
 /* UPDATED: Job title highlighter */
 .tab-panel li h4 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Kalam', cursive;
     font-size: 1.25rem;
     font-weight: 700;
     color: #292524;
@@ -1125,6 +1250,11 @@ body::after {
     background: linear-gradient(to top, transparent 20%, #fef08a 20%, #fef08a 80%, transparent 80%);
     padding: 0 4px;
     margin-left: -4px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 .dark .tab-panel li h4 {
     color: #f5f5f4;
@@ -1134,7 +1264,7 @@ body::after {
 
 /* UPDATED: Dymo-label style for company/role */
 .tab-panel .company-role {
-    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-family: monospace;
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -1148,6 +1278,11 @@ body::after {
     text-shadow: 0 1px 0 rgba(255,255,255,0.4);
     margin-bottom: 12px;
     display: inline-block;
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 .dark .tab-panel .company-role {
     background: #57534e;
@@ -1258,12 +1393,64 @@ nav {
 }
 nav::after {
     content: '01';
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: monospace;
     font-size: 0.75rem;
     color: #a8a29e; /* stone-400 */
     position: absolute;
     bottom: -5px;
     right: 0;
+}
+
+/* Mobile Menu Styles - Mobile First */
+.hamburger-button {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-menu-overlay {
+    z-index: 50;
+}
+
+.mobile-menu {
+    z-index: 51;
+}
+
+.mobile-nav-link {
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f4f6; /* gray-100 */
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.dark .mobile-nav-link {
+    border-bottom-color: #374151; /* gray-700 */
+}
+
+.mobile-cv-button {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Desktop overrides - ensure existing layout remains unchanged */
+@media (min-width: 640px) {
+    .hamburger-button {
+        display: none;
+    }
+
+    .mobile-menu-overlay {
+        display: none;
+    }
 }
 
 /* NEW: Final To-Do Note */
@@ -1320,34 +1507,8 @@ nav::after {
   color: white;
 }
 
-@keyframes brush-away {
-  0% { transform: translateX(0) rotate(0deg); opacity: 1; }
-  100% { transform: translateX(100%) rotate(20deg); opacity: 0; }
-}
 
-.brush-away {
-  animation: brush-away 1s ease-in-out forwards;
-}
 
-@keyframes scribble-out {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-@keyframes scribble-in {
-  0% { stroke-dashoffset: 1000; }
-  100% { stroke-dashoffset: 0; }
-}
-
-.scribble-animate path {
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 0;
-  animation: scribble-out 0.5s forwards, scribble-in 1.5s 0.5s forwards;
-}
-
-.steam-fast path {
-  animation-duration: 1.5s !important; /* 3x faster than original 4.5s */
-}
 /* Easter Egg Styles */
 .sketchbook-mode * {
   font-family: 'Kalam', cursive !important;

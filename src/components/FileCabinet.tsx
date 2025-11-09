@@ -21,18 +21,20 @@ const FileCabinet = () => {
 
   return (
     <section id="professional-files" className="mb-24 fade-in-up" aria-labelledby="files-heading" ref={sectionRef}>
-      <h2 id="files-heading" className="font-display text-4xl font-bold mb-12 text-center dark:text-stone-100">The Not-So-Boring Paperwork</h2>
+      <h2 id="files-heading" className="font-dancing-script text-4xl font-bold mb-12 text-center dark:text-stone-100">The Not-So-Boring Paperwork</h2>
       <div className="file-cabinet paper max-w-4xl mx-auto p-8 md:p-12 lg:p-16 relative transform rotate-1 shadow-xl">
-        <div className="file-tabs">
-          {tabs.map(tab => (
-            <button 
-              key={tab.id} 
-              className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="file-tabs-container">
+          <div className="file-tabs">
+            {tabs.map(tab => (
+              <button 
+                key={tab.id} 
+                className={`tab-button font-patrick-hand ${activeTab === tab.id ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
         <div className="file-content prose max-w-none prose-manifesto">
           <div id="tab-experience" className={`tab-panel ${activeTab === 'experience' ? 'active' : ''}`}>

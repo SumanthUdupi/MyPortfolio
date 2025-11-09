@@ -8,10 +8,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        display: ['Playfair Display', 'serif'],
-        hand: ['Kalam', 'cursive'],
-        mono: ['IBM Plex Mono', 'monospace'],
+        'kalam': ['Kalam', 'cursive'],
+        'caveat': ['Caveat', 'cursive'],
+        'dancing-script': ['Dancing Script', 'cursive'],
+        'patrick-hand': ['Patrick Hand', 'cursive'],
+        'gochi-hand': ['Gochi Hand', 'cursive'],
+        'sacramento': ['Sacramento', 'cursive'],
+        body: ['system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', '"Open Sans"', '"Helvetica Neue"', 'sans-serif'],
       },
       boxShadow: {
         contact: '0 1px 2px rgba(0,0,0,0.08)',

@@ -7,20 +7,19 @@ import About from './components/About';
 import FileCabinet from './components/FileCabinet';
 import Footer from './components/Footer';
 import CaseStudyModal from './components/CaseStudyModal';
-import Toast from './components/Toast';
+import CaseStudyPage from './components/CaseStudyPage'; // Added
 import { caseStudies, CaseStudy } from './data/caseStudies';
 import pokemonCapturedSound from '/audio/pokemon-captured.mp3';
 import engineIgnitionSound from '/audio/engine-ignition.mp3';
 import f1FlybySound from '/audio/f1-flyby.mp3';
-import { useEasterEggs } from './hooks/useEasterEggs';
-import Draggable from './components/Draggable';
+import useIsMobile from './hooks/useIsMobile'; // Added
 import './style.css';
 
 function App() {
+  const isMobile = useIsMobile(); // Added
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudy | null>(null);
-
-  const { toastMessage, setToastMessage, figmaVisible, isSketchbookModeActive, sketchbookBadgeVisible } = useEasterEggs();
+  const [selectedCaseStudyId, setSelectedCaseStudyId] = useState<string | null>(null); // Modified
+  const selectedCaseStudy = selectedCaseStudyId ? caseStudies[selectedCaseStudyId] : null; // Derived
 
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
@@ -54,7 +53,7 @@ function App() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedCaseStudy(null);
+    setSelectedCaseStudyId(null); // Clear for mobile page and desktop modal
   };
 
   const playSound = (soundFile: string) => {
@@ -77,10 +76,12 @@ function App() {
       default:
         break;
     }
-    const projectData = caseStudies[projectId];
-    console.log('Selected case study data:', projectData);
-    setSelectedCaseStudy(projectData);
-    setIsModalOpen(true);
+    if (isMobile) {
+      setSelectedCaseStudyId(projectId);
+    } else {
+      setSelectedCaseStudyId(projectId); // Still set ID for desktop modal to derive case study
+      setIsModalOpen(true);
+    }
     console.log('isModalOpen after setting:', true);
   };
 
@@ -92,34 +93,23 @@ function App() {
 
   return (
     <>
-      {figmaVisible && (
-        <div className="figma-logo-container">
-          <div className="figma-logo"></div>
-        </div>
-      )}
-      {sketchbookBadgeVisible && (
-        <div className="fixed bottom-4 right-4 bg-yellow-300 text-yellow-900 px-3 py-1 rounded-full shadow-lg text-sm font-bold z-[1000]">
-          Sketchbook Mode Active!
-        </div>
-      )}
       <a href="#main-content" className="skip-to-content">Skip to main content</a>
-      <Layout>
-        <Header />
-        <Hero />
-        <ProjectSection title="After-Hours Atelier" projects={personalProjects} onProjectClick={handleProjectClick} />
-        <ProjectSection title="Professional Case Studies" projects={professionalProjects} onProjectClick={handleProjectClick} />
-        <About />
-        {isSketchbookModeActive ? (
-          <Draggable initialStyle={{ top: '50px', left: '50px', zIndex: 1000 }}>
+      {selectedCaseStudyId && isMobile ? (
+        <CaseStudyPage caseStudy={selectedCaseStudy} onClose={handleCloseModal} isMobile={isMobile} />
+      ) : (
+        <>
+          <Layout>
+            <Header />
+            <Hero />
+            <ProjectSection title="After-Hours Atelier" projects={personalProjects} onProjectClick={handleProjectClick} />
+            <ProjectSection title="Professional Case Studies" projects={professionalProjects} onProjectClick={handleProjectClick} />
+            <About />
             <FileCabinet />
-          </Draggable>
-        ) : (
-          <FileCabinet />
-        )}
-        <Footer />
-      </Layout>
-      <CaseStudyModal isOpen={isModalOpen} onClose={handleCloseModal} caseStudy={selectedCaseStudy} />
-      {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
+            <Footer />
+          </Layout>
+          <CaseStudyModal isOpen={isModalOpen} onClose={handleCloseModal} caseStudy={selectedCaseStudy} />
+        </>
+      )}
     </>
   );
 }

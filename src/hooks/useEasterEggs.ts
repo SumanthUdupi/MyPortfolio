@@ -236,6 +236,9 @@ export const useEasterEggs = () => {
         }
     }
 
+    // Always show the quest board on first load
+    showQuestBoard();
+
     defineWindowFunctions();
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -270,14 +273,10 @@ export const useEasterEggs = () => {
 
         if (newSketchbookModeState) {
             setToastMessage("Sketchbook Mode Activated! Time to get creative.");
-            const audio = new Audio('/audio/binder-clip.mp3');
-            audio.play();
             console.log("'sketchbook-mode' class is now active.");
             setSketchbookBadgeVisible(true);
         } else {
             setToastMessage("Sketchbook Mode Deactivated. Back to reality.");
-            const audio = new Audio('/audio/sneeze.mp3');
-            audio.play();
             console.log("'sketchbook-mode' class is now inactive.");
             setSketchbookBadgeVisible(false);
         }
@@ -310,16 +309,14 @@ export const useEasterEggs = () => {
         console.log(`
               ,,,,,,,,,,
             ,' ;  ;  ; ',
-           /,,,;,,;,;,,\ 
+           /,,,;,,;,;,,\
           |,,,,;,,;,;,,,|
           |,,,,;,,;,;,,,|
           |,,,,;,,;,;,,,|
-           \,,,;,,;,;,,/ 
-            ',,;,;,;,,' 
+           \,,,;,,;,;,,/
+            ',,;,;,;,,''
               '''''
         `);
-        const audio = new Audio('/audio/pokemon-captured.mp3');
-        audio.play();
         setTimeout(() => console.log("It's Sumanth!"), 2000);
         markRiddleAsSolved(5);
         setKeySequence([]);

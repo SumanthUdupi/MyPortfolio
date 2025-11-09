@@ -20,8 +20,8 @@ const ProjectSection = ({ title, projects, onProjectClick }: ProjectSectionProps
 
   return (
     <section ref={sectionRef} className="mb-24 md:mb-32 fade-in-up" aria-labelledby={`${title.toLowerCase().replace(/\s/g, '-')}-heading`}>
-      <h2 id={`${title.toLowerCase().replace(/\s/g, '-')}-heading`} className="font-display text-4xl font-bold mb-12 text-center dark:text-stone-100">{title}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16">
+      <h2 id={`${title.toLowerCase().replace(/\s/g, '-')}-heading`} className="font-dancing-script text-4xl font-bold mb-12 text-center dark:text-stone-100">{title}</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
         {projects.map(project => (
           <ProjectCard key={project.id} project={project} onClick={() => onProjectClick(project.id)} />
         ))}

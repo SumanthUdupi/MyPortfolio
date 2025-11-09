@@ -34,7 +34,7 @@ const CaseStudyModal = ({ isOpen, onClose, caseStudy }: CaseStudyModalProps) => 
         </button>
         <div id="modal-content-target" className="p-8 md:p-12">
           <h3 className="font-display text-3xl md:text-4xl font-bold mb-4 dark:text-stone-100">{caseStudy.title}</h3>
-          <p className="font-hand text-xl text-stone-600 mb-8 dark:text-stone-400">{caseStudy.hook}</p>
+          <p className="font-body text-xl text-stone-600 mb-8 dark:text-stone-400">{caseStudy.hook}</p>
           
           <img src={caseStudy.imageUrl} alt={caseStudy.title} className="w-full h-auto rounded-lg mb-8" />
 

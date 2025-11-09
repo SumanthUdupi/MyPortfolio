@@ -1,10 +1,23 @@
 import { useEffect, useRef } from 'react';
+import useIsMobile from './useIsMobile';
 
 const useScrollAnimation = () => {
   const elementsRef = useRef<HTMLElement[]>([]);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
+    // Disable animations on mobile for performance
+    if (isMobile) {
+      // Immediately make all elements visible without animation
+      elementsRef.current.forEach((el) => {
+        if (el) {
+          el.classList.add('is-visible');
+        }
+      });
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -16,6 +29,8 @@ const useScrollAnimation = () => {
       },
       {
         threshold: 0.1,
+        // Add rootMargin for better performance on desktop
+        rootMargin: '50px 0px',
       }
     );
 
@@ -31,7 +46,7 @@ const useScrollAnimation = () => {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [isMobile]);
 
   const registerElement = (el: HTMLElement | null) => {
     if (el && !elementsRef.current.includes(el)) {
