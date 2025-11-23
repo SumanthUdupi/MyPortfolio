@@ -55,6 +55,10 @@ export default {
         blue: {
           100: '#e0f2ff',
           800: '#1e3a8a',
+        },
+        rose: { // NEW color
+          400: '#f472b6',
+          600: '#e879f9',
         }
       }
     },

@@ -22,7 +22,14 @@ const useScrollAnimation = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
+            const delay = entry.target.dataset.animationDelay;
+            if (delay) {
+              setTimeout(() => {
+                entry.target.classList.add('is-visible');
+              }, parseFloat(delay)); // Parse delay like "200ms"
+            } else {
+              entry.target.classList.add('is-visible');
+            }
             observer.unobserve(entry.target);
           }
         });

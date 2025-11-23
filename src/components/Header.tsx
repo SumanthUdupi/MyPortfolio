@@ -1,29 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 const Header = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-      setDarkMode(true);
-    } else {
-      document.documentElement.classList.remove('dark');
-      setDarkMode(false);
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    if (darkMode) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    } else {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    }
-    setDarkMode(!darkMode);
-  };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -44,7 +24,7 @@ const Header = () => {
           <a href="Sumanth-Udupi-Resume.pdf" download="Sumanth-Udupi-Resume.pdf" id="cv-button" className="cv-button font-patrick-hand bg-white py-2 px-4 rounded-md shadow-md transform -rotate-2 text-stone-700">
             Download CV (The Paperwork)
           </a>
-          <button id="theme-toggle" className="light-switch" aria-label="Toggle light and dark mode" onClick={toggleTheme}>
+          <button id="theme-toggle" className="light-switch" aria-label="Toggle light and dark mode" onClick={toggleDarkMode}>
             <div className="lever"></div>
           </button>
         </div>

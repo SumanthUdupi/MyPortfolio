@@ -9,6 +9,12 @@
   --font-heading-hero: 'Kalam', cursive;
   --font-heading-h2: 'Kalam', cursive;
   --font-heading-h3: 'Kalam', cursive;
+
+  /* NEW: Light Mode Color Palette Variables */
+  --bg-primary-light: #fefcfb; /* Warm Off-white/Cream */
+  --bg-secondary-light: #fdfaf7; /* Slightly lighter background */
+  --text-primary-light: #4a4a4a; /* Warmer, soft black text */
+  --accent-light: #c0d9e8; /* Gentle pastel blue */
 }
 
 /* Base HTML font size for rem units */
@@ -22,6 +28,13 @@ body {
   line-height: 1.6; /* Updated for readability */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* background-color: var(--bg-primary-light); */
+  color: var(--text-primary-light);
+  /* NEW: Subtle grid background for light mode */
+  /* background-image: linear-gradient(0deg, transparent 24%, rgba(0,0,0,0.01) 25%, rgba(0,0,0,0.01) 26%, transparent 27%),
+                    linear-gradient(90deg, transparent 24%, rgba(0,0,0,0.01) 25%, rgba(0,0,0,0.01) 26%, transparent 27%); */
+  background-size: 25px 25px; /* Adjust grid size as needed */
+  background-attachment: fixed;
 }
 
 h1 {
@@ -143,17 +156,27 @@ a, button {
 
 /* 2b. Add parallax movement to sticky-note */
 .sticky-note {
-    /* We use CSS vars for smooth parallax. JS will update --mouse-x/y */
-    /* UPDATED: Parallax cut by 75% */
-    transform: rotate(2deg);
-    transition: transform 0.1s linear, box-shadow 0.3s ease;
+    /* We use CSS vars for smooth parallax. JS will update --mouse-x/y and --scroll-y */
+    transform:
+        translate(
+            calc(var(--mouse-x, 0) * 0.015),
+            calc(var(--mouse-y, 0) * 0.015)
+        )
+        translateY(calc(var(--scroll-y, 0) * -0.15)) /* Scroll parallax */
+        rotate(2deg);    transition: transform 0.1s linear, box-shadow 0.3s ease;
+    animation: flutter 15s infinite ease-in-out;
 }
 
 .sticky-note:hover {
     /* Combine hover effects with parallax variables */
-    /* UPDATED: Parallax cut by 75% */
-    transform: rotate(0deg) scale(1.05);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    transform: 
+        translate(
+            calc(var(--mouse-x, 0) * -0.01), /* Slightly counter-move for "peel" */
+            calc(var(--mouse-y, 0) * -0.01)
+        )
+        rotate(calc(var(--mouse-x, 0) * 0.005deg)) /* Slight tilt with mouse */
+        scale(1.06); /* Slightly larger scale */
+    box-shadow: 0 12px 25px rgba(0,0,0,0.25); /* More dramatic shadow */
     z-index: 10;
 }
 
@@ -232,17 +255,29 @@ a, button {
 
 /* 5b. Add parallax to "About Me" paper */
 #about .paper {
-    /* UPDATED: Parallax cut by 75% */
-    transform: rotate(-1deg);
+    transform:
+        translate(
+            calc(var(--mouse-x, 0) * -0.01),
+            calc(var(--mouse-y, 0) * -0.01)
+        )
+        translateY(calc(var(--scroll-y, 0) * -0.08)) /* Scroll parallax */
+        rotate(-1deg);
     transition: transform 0.1s linear;
 }
-
 /* 6. Ambient "Flutter" Animation */
 @keyframes flutter {
-    0% { transform: rotate(2deg); }
-    33% { transform: rotate(1.5deg); }
-    66% { transform: rotate(2.5deg); }
-    100% { transform: rotate(2deg); }
+    0% { transform: rotate(2deg) translateY(0px); }
+    33% { transform: rotate(1.5deg) translateY(-2px); }
+    66% { transform: rotate(2.5deg) translateY(2px); }
+    100% { transform: rotate(2deg) translateY(0px); }
+}
+
+@keyframes gentle-float {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(2px, -1px) rotate(0.2deg); }
+    50% { transform: translate(0, 1px) rotate(-0.2deg); }
+    75% { transform: translate(-2px, -1px) rotate(0.1deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
 }
 
 /* 7. Case Study Modal - UPDATED Part 3.1 */
@@ -327,14 +362,14 @@ a, button {
         box-shadow: var(--shadow-proximity);
     }
 
-    /* Reduce parallax effects on mobile for better performance */
-    .sticky-note,
+    /* Reduce parallax effects on mobile for better performance - REMOVED FOR MOBILE PARALLAX */
+    /* .sticky-note,
     .project-card,
     #bg-texture,
     .bg-item {
         transform: none !important;
         transition: none !important;
-    }
+    } */
 
     /* Disable background animations on mobile */
     .dust-mote {
@@ -343,9 +378,9 @@ a, button {
 
     /* Reduce flutter animation frequency */
     @keyframes flutter {
-        0% { transform: rotate(1deg); }
-        50% { transform: rotate(-0.5deg); }
-        100% { transform: rotate(1deg); }
+        0% { transform: rotate(1deg) translateY(0px); }
+        50% { transform: rotate(-0.5deg) translateY(-1px); }
+        100% { transform: rotate(1deg) translateY(0px); }
     }
     .sticky-note {
         animation: flutter 20s infinite ease-in-out;
@@ -363,31 +398,43 @@ a, button {
 
 /* UPDATED Part 1.2: Warm Wood Desk */
 #bg-texture {
-    background: 
-        /* Wood grain lines */
-        repeating-linear-gradient(
-          90deg,
-          transparent,
-          transparent 2px,
-          rgba(101,67,33,0.03) 2px,
-          rgba(101,67,33,0.03) 3px,
-          transparent 3px,
-          transparent 50px
-        ),
-        /* Wood knots (random circular gradients) */
-        radial-gradient(ellipse at 15% 30%, rgba(80,50,20,0.08) 0%, transparent 3%),
-        radial-gradient(ellipse at 75% 60%, rgba(80,50,20,0.06) 0%, transparent 4%),
-        /* Base wood color with gradient */
-        linear-gradient(180deg, #8b7355 0%, #a0826d 100%);
-      
-    background-blend-mode: multiply, overlay, overlay, normal;
-    filter: contrast(1.02) brightness(0.98);
     position: absolute;
     inset: 0;
+    /* NEW: Subtle wood texture for light mode */
+    background: 
+        /* Subtle noise/grain layer */
+        repeating-linear-gradient(
+          0deg,
+          rgba(0,0,0,0.005) 0%,
+          rgba(0,0,0,0.005) 1px,
+          transparent 1px,
+          transparent 2px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          rgba(0,0,0,0.005) 0%,
+          rgba(0,0,0,0.005) 1px,
+          transparent 1px,
+          transparent 2px
+        ),
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 5px,
+          rgba(0,0,0,0.01) 5px,
+          rgba(0,0,0,0.01) 6px
+        ),
+        radial-gradient(ellipse at 80% 20%, rgba(0,0,0,0.02) 0%, transparent 5%),
+        radial-gradient(ellipse at 20% 90%, rgba(0,0,0,0.015) 0%, transparent 6%);
+    /* ... other styles ... */
     /* Parallax: Layer 3 (Deepest) */
-    /* UPDATED: Parallax cut by 75% */
-    transition: transform 0.1s linear;
-}
+        transform:
+            translate(
+                calc(var(--mouse-x, 0) * -0.005),
+                calc(var(--mouse-y, 0) * -0.005)
+            )
+            translateY(calc(var(--scroll-y, 0) * 0.05)); /* Scroll parallax (moves slower than foreground) */
+        transition: transform 0.1s linear;}
 /* NEW: Dark Mode Desk Texture */
 .dark #bg-texture {
     background: 
@@ -406,7 +453,56 @@ a, button {
         radial-gradient(ellipse at 75% 60%, rgba(255,255,255,0.01) 0%, transparent 4%),
         /* Base wood color with gradient */
         linear-gradient(180deg, #3a2b1a 0%, #2a1b0a 100%);
-    filter: contrast(1.02) brightness(0.8);
+    filter: contrast(1.01) brightness(0.9); /* Slightly more subtle */
+}
+
+/* NEW: Dark Mode Color Palette Variables */
+.dark {
+  --bg-primary-dark: #1a1a2e; /* Deep charcoal/near black */
+  --bg-secondary-dark: #2a2a4a; /* Slightly lighter dark tone */
+  --text-primary-dark: #e0e0e0; /* Light readable text */
+  --accent-dark: #bb86fc; /* Vibrant purple accent */
+}
+
+.dark body {
+  background-color: var(--bg-primary-dark);
+  color: var(--text-primary-dark);
+  /* NEW: Subtle grid background for dark mode */
+  background-image: linear-gradient(0deg, transparent 24%, rgba(255,255,255,0.01) 25%, rgba(255,255,255,0.01) 26%, transparent 27%),
+                    linear-gradient(90deg, transparent 24%, rgba(255,255,255,0.01) 25%, rgba(255,255,255,0.01) 26%, transparent 27%);
+  background-size: 25px 25px; /* Adjust grid size as needed */
+}
+
+/* NEW: Vignetting effect */
+#bg-layers::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Enhanced golden hour vignette */
+  background: radial-gradient(ellipse at center, transparent 0%, transparent 60%, rgba(255,220,180,0.15) 100%); 
+  z-index: -1; /* Below content but above other background layers */
+}
+
+.dark #bg-layers::before {
+  /* Deeper indigo shadow vignette for dark mode */
+  background: radial-gradient(ellipse at center, transparent 0%, transparent 60%, rgba(10,0,20,0.7) 100%); 
+}
+
+/* NEW: Light Beam Effect */
+#bg-layers::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Enhanced golden hour light beam */
+  background: linear-gradient(135deg, rgba(255,245,210,0.18) 0%, transparent 35%, transparent 65%, rgba(255,245,210,0.08) 100%); 
+  z-index: -2; /* Below vignetting */
+}
+
+.dark #bg-layers::after {
+  /* Subtler, cooler dark beam */
+  background: linear-gradient(135deg, rgba(40,40,60,0.08) 0%, transparent 35%, transparent 65%, rgba(40,40,60,0.04) 100%); 
 }
 
 /* 10. Background "Scattered Items" */
@@ -416,24 +512,66 @@ a, button {
     transition: transform 0.1s linear;
 }
 
+/* NEW: Ruler and Color Swatches positioning and initial styling */
+#ruler {
+    top: 10%;
+    right: 10%;
+    width: 180px;
+    opacity: 0.5;
+    /* Parallax for ruler */
+    transform:
+        translate(
+            calc(var(--mouse-x, 0) * 0.015),
+            calc(var(--mouse-y, 0) * 0.015)
+        )
+        translateY(calc(var(--scroll-y, 0) * -0.1px)) /* Scroll parallax */
+        rotate(10deg);
+    animation: gentle-float 20s ease-in-out infinite alternate; /* Applied animation */
+}.dark #ruler {
+    opacity: 0.3; /* More subtle in dark mode */
+}
+
+#color-swatches {
+    bottom: 25%;
+    left: 30%;
+    width: 120px;
+    opacity: 0.6;
+    /* Parallax for color swatches */
+    transform:
+        translate(
+            calc(var(--mouse-x, 0) * -0.01),
+            calc(var(--mouse-y, 0) * -0.01)
+        )
+        translateY(calc(var(--scroll-y, 0) * -0.05px)) /* Scroll parallax */
+        rotate(-8deg);
+    animation: gentle-float 22s ease-in-out infinite alternate; /* Applied animation */
+}.dark #color-swatches {
+    opacity: 0.4; /* More subtle in dark mode */
+}
+
 /* UPDATED Part 1.3: Enhanced Coffee Ring */
 #coffee-ring {
     top: 20%;
     left: 15%;
     width: 100px;
     opacity: 0.6; /* Made slightly more visible */
-    /* Parallax: Moves a bit. Scroll: Rotates. */
-    /* UPDATED: Parallax cut by 75% */
-    transform: 
+    /* Parallax: Moves a bit. Scroll: Rotates and translates. */
+    transform:
+        translate(
+            calc(var(--mouse-x, 0) * 0.01),
+            calc(var(--mouse-y, 0) * 0.01)
+        )
+        translateY(calc(var(--scroll-y, 0) * -0.07px)) /* Scroll parallax */
         rotate(calc(var(--scroll-y, 0) * 0.05deg));
-}
-/* NEW: Dark Mode Coffee Ring */
+    /* UPDATED: Parallax cut by 75% */
+    transition: transform 0.1s linear;
+}/* NEW: Dark Mode Coffee Ring - Adjusted for copper/brass glimmer */
 .dark #coffee-ring {
-    opacity: 0.4;
+    opacity: 0.5; /* Slightly more visible */
 }
 .dark #coffee-ring path, .dark #coffee-ring circle {
-    stroke: rgba(200, 180, 170, 0.2);
-    fill: rgba(200, 180, 170, 0.03);
+    stroke: rgba(184, 115, 51, 0.25); /* Muted copper stroke */
+    fill: rgba(184, 115, 51, 0.05); /* Muted copper fill */
 }
 
 /* REMOVED: #paperclip */
@@ -446,11 +584,15 @@ a, button {
     width: 150px;
     opacity: 0.4;
     /* Parallax: Layer 5 */
-    /* UPDATED: Parallax cut by 75% */
-    transform: 
+    transform:
+        translate(
+            calc(var(--mouse-x, 0) * 0.02),
+            calc(var(--mouse-y, 0) * 0.02)
+        )
+        translateY(calc(var(--scroll-y, 0) * -0.12px)) /* Scroll parallax */
         rotate(calc(var(--scroll-y, 0) * 0.02deg));
-}
-/* NEW: Dark Mode Sketchbook */
+    transition: transform 0.1s linear;
+}/* NEW: Dark Mode Sketchbook */
 .dark #sketchbook rect:first-child {
     fill: #44403c;
     stroke: #292524;
@@ -471,16 +613,20 @@ a, button {
     width: 120px;
     opacity: 0.5;
     /* Parallax: Layer 6 (On top of sketchbook) */
-    /* UPDATED: Parallax cut by 75% */
-    transform: 
+    transform:
+        translate(
+            calc(var(--mouse-x, 0) * 0.025),
+            calc(var(--mouse-y, 0) * 0.025)
+        )
+        translateY(calc(var(--scroll-y, 0) * -0.15px)) /* Scroll parallax */
         rotate(calc(var(--scroll-y, 0) * -0.01deg));
-}
-/* NEW: Dark Mode Pen */
+    transition: transform 0.1s linear;
+}/* NEW: Dark Mode Pen - Adjusted for metallic glimmer */
 .dark #pen rect {
-    fill: #1c1917;
+    fill: #1c1917; /* Darker body */
 }
 .dark #pen path {
-    fill: #78716c;
+    fill: #b87333; /* Copper-like tip */
 }
 
 /* Layer 2 Items (Ambient) */
@@ -490,13 +636,17 @@ a, button {
     width: 300px;
     opacity: 0.15;
     /* Parallax: Layer 2 (Deep Background) */
-    /* UPDATED: Parallax cut by 75% */
-    transform: 
+    transform:
+        translate(
+            calc(var(--mouse-x, 0) * -0.007),
+            calc(var(--mouse-y, 0) * -0.007)
+        )
+        translateY(calc(var(--scroll-y, 0) * 0.08)) /* Scroll parallax (moves slower) */
         rotate(-30deg);
     /* UPDATED: Slower sway */
     animation: sway 20s infinite ease-in-out;
-}
-/* NEW: Dark Mode Plant Shadow */
+    transition: transform 0.1s linear;
+}/* NEW: Dark Mode Plant Shadow */
 .dark #plant-shadow {
     opacity: 0.05;
 }
@@ -523,7 +673,7 @@ a, button {
 }
 
 #coffee-steam path {
-    stroke: #a8a29e; /* stone-400 */
+    stroke: rgba(184, 166, 140, 0.7); /* Warm light beige/brown for steam in light mode */
     stroke-width: 2;
     stroke-linecap: round;
     fill: none;
@@ -545,16 +695,20 @@ a, button {
     0% {
         opacity: 0;
         stroke-dasharray: 0, 50;
-        transform: translateY(0) scale(0.8);
+        transform: translateY(0px) scale(0.7);
     }
-    50% {
-        opacity: 0.6;
-        stroke-dasharray: 25, 25;
+    30% {
+        opacity: 0.7;
+        stroke-dasharray: 20, 30;
+    }
+    70% {
+        opacity: 0.3;
+        stroke-dasharray: 35, 15;
     }
     100% {
         opacity: 0;
         stroke-dasharray: 0, 50;
-        transform: translateY(-30px) scale(1);
+        transform: translateY(-40px) scale(1.1);
     }
 }
 
@@ -562,18 +716,29 @@ a, button {
 /* 11. Background "Dust Motes" */
 .dust-mote {
     position: absolute;
-    background-color: rgba(168, 162, 158, 0.3); /* stone-500 */
+    background-color: rgba(255, 223, 150, 0.3); /* Warmer, golden hue for light mode */
     border-radius: 50%;
     filter: blur(3px);
     will-change: transform, opacity;
     animation: float 20s infinite ease-in-out;
-    /* Parallax: Layer 1 (Deepest) */
-    /* UPDATED: Removed mouse parallax */
-    transform: translate(0,0);
+    /* Parallax: Layer 1 (Deepest) - Reintroduced subtle mouse parallax */
+    transform:
+        translate(
+            calc(var(--mouse-x, 0) * -0.003),
+            calc(var(--mouse-y, 0) * -0.003)
+        )
+        translateY(calc(var(--scroll-y, 0) * 0.02)); /* Scroll parallax (moves very slowly) */
+    transition: transform 0.1s linear;
 }
-/* NEW: Dark Mode Dust */
+
+/* New rule for parallax layers in WornWoodenDeskBackground */
+.parallax-layer {
+  will-change: transform;
+  transition: transform 0.1s linear;
+  transform: translateY(calc(var(--scroll-y, 0) * var(--parallax-speed)));
+}/* NEW: Dark Mode Dust */
 .dark .dust-mote {
-    background-color: rgba(200, 200, 200, 0.2);
+    background-color: rgba(180, 200, 255, 0.2); /* Cooler, ethereal white/blue */
     filter: blur(2px);
 }
 
@@ -585,17 +750,20 @@ a, button {
 .dust-mote:nth-child(5) { width: 6px; height: 6px; top: 85%; left: 20%; animation-delay: -15s; animation-duration: 48s; }
 
 @keyframes float {
-    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
-    50% { transform: translateY(-20px) translateX(15px) scale(1.1); opacity: 0.5; }
-    100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
+    0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0.3; }
+    25% { transform: translateY(-15px) translateX(10px) scale(1.05) rotate(2deg); opacity: 0.4; }
+    50% { transform: translateY(-25px) translateX(-10px) scale(1.1) rotate(-3deg); opacity: 0.5; }
+    75% { transform: translateY(-10px) translateX(12px) scale(1.05) rotate(1deg); opacity: 0.4; }
+    100% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0.3; }
 }
 
 /* Ambient Animation (Sway) */
 @keyframes sway {
-    /* UPDATED: Slower, more subtle sway */
-    0% { transform: rotate(-30.5deg); }
-    50% { transform: rotate(-29.5deg); }
-    100% { transform: rotate(-30.5deg); }
+    0% { transform: rotate(-30.5deg) translateY(0px); }
+    25% { transform: rotate(-29.8deg) translateY(-2px); }
+    50% { transform: rotate(-30.2deg) translateY(0px); }
+    75% { transform: rotate(-29.6deg) translateY(2px); }
+    100% { transform: rotate(-30.5deg) translateY(0px); }
 }
 
 /* 12. Click Ripple Effect */
@@ -655,15 +823,20 @@ a, button {
     width: 40px;
     /* UPDATED: More subtle */
     opacity: 0.1;
-    /* UPDATED: Parallax cut */
-    transform: rotate(-15deg);
-}
-/* NEW: Dark Mode Imperfections */
+    transform:
+        translate(
+            calc(var(--mouse-x, 0) * 0.018),
+            calc(var(--mouse-y, 0) * 0.018)
+        )
+        translateY(calc(var(--scroll-y, 0) * -0.13)) /* Scroll parallax */
+        rotate(-15deg);
+    transition: transform 0.1s linear;
+}/* NEW: Dark Mode Imperfections */
 .dark #ink-splotch {
     opacity: 0.2;
 }
 .dark #ink-splotch path, .dark #ink-splotch circle {
-    fill: #000;
+    fill: #1a1b2e; /* Very dark desaturated blue/indigo for ink splotch */
 }
 
 #eraser-shavings {
@@ -672,9 +845,14 @@ a, button {
     width: 50px;
     /* UPDATED: More subtle */
     opacity: 0.15;
-    /* UPDATED: Parallax cut */
-}
-.dark #eraser-shavings {
+    transform:
+        translate(
+            calc(var(--mouse-x, 0) * -0.015),
+            calc(var(--mouse-y, 0) * -0.015)
+        )
+        translateY(calc(var(--scroll-y, 0) * -0.09)); /* Scroll parallax */
+    transition: transform 0.1s linear;
+}.dark #eraser-shavings {
     opacity: 0.3;
 }
 .dark #eraser-shavings ellipse {
@@ -687,9 +865,14 @@ a, button {
     width: 80px;
     /* UPDATED: More subtle */
     opacity: 0.05;
-    /* UPDATED: Parallax cut */
-}
-.dark #pencil-scribble path {
+    transform:
+        translate(
+            calc(var(--mouse-x, 0) * 0.012),
+            calc(var(--mouse-y, 0) * 0.012)
+        )
+        translateY(calc(var(--scroll-y, 0) * -0.06)); /* Scroll parallax */
+    transition: transform 0.1s linear;
+}.dark #pencil-scribble path {
     stroke: #a8a29e;
     /* UPDATED: More subtle */
     opacity: 0.1;
@@ -726,7 +909,7 @@ a, button {
     color: #a8a29e; /* stone-400 */
 }
 .dark .nav-link:hover {
-    color: #5eead4; /* cyan-400 */
+    color: #f472b6; /* rose-400 */
 }
 
 .nav-link::after {
@@ -760,7 +943,7 @@ a, button {
   width: 100%;
 }
 .nav-link:hover {
-  color: #1c1917;
+  color: #e879f9; /* rose-600 */
 }
 
 /* NEW: Part 2.2 - CV Button Jiggle */
@@ -770,13 +953,41 @@ a, button {
   min-width: 44px;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  position: relative; /* Added for pseudo-element */
+  overflow: hidden; /* Added to contain glow */
 }
+
+.cv-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(232,121,249,0.5) 0%, rgba(232,121,249,0) 70%); /* Rose glow */
+    transition: width 0.4s ease-out, height 0.4s ease-out, opacity 0.4s ease-out;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    z-index: -1;
+}
+
+.cv-button:hover::before {
+    width: 200px;
+    height: 200px;
+    opacity: 1;
+}
+
 /* NEW: Dark Mode CV Button */
 .dark .cv-button {
     background: #44403c; /* stone-600 */
     color: #e7e5e4; /* stone-200 */
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
+
+.dark .cv-button::before {
+    background: radial-gradient(circle, rgba(244,114,182,0.5) 0%, rgba(244,114,182,0) 70%); /* Rose glow for dark mode */
+}
+
 
 /* REMOVED: Hover jiggle */
 /* .cv-button:hover {
@@ -1460,27 +1671,28 @@ nav::after {
     left: 8%;
     width: 120px;
     height: 120px;
-    background: linear-gradient(135deg, #e0f2ff 0%, #bae6fd 100%); /* Blue */
+    background: linear-gradient(135deg, #fdf8e8 0%, #f0e6c8 100%); /* Light, slightly aged kraft paper */
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     /* UPDATED: Parallax cut */
-    transform: 
-        translate(calc(var(--mouse-x, 0) * 0.008px), calc(var(--mouse-y, 0) * 0.008px))
+    transform:
+        translate(calc(var(--mouse-x, 0) * 0.015), calc(var(--mouse-y, 0) * 0.015))
+        translateY(calc(var(--scroll-y, 0) * -0.16)) /* Scroll parallax */
         rotate(-5deg);
     padding: 12px;
     padding-left: 20px;
-}
-.dark .bg-sticky-note-todo {
-     background: linear-gradient(135deg, #075985 0%, #0c4a6e 100%);
+    transition: transform 0.1s linear; /* Ensure transition is present */
+}.dark .bg-sticky-note-todo {
+     background: linear-gradient(135deg, #3a3a32 0%, #2a2a22 100%); /* Dark muted kraft paper */
      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 .todo-list {
     font-family: 'Kalam', cursive;
     font-size: 0.8rem;
     line-height: 1.6;
-    color: #1e3a8a; /* blue-800 */
+    color: #5a4a3a; /* Darker brown for text */
 }
 .dark .todo-list {
-    color: #e0f2ff; /* blue-100 */
+    color: #e0e0c0; /* Light, muted yellow for text */
 }
 .todo-list li:first-child {
     text-decoration: line-through;

@@ -1,3 +1,4 @@
+import WornWoodenDeskBackground from './components/WornWoodenDeskBackground';
 import { useState, useEffect } from 'react';
 import Layout from './components/Layout';
 import Header from './components/Header';
@@ -13,9 +14,11 @@ import pokemonCapturedSound from '/audio/pokemon-captured.mp3';
 import engineIgnitionSound from '/audio/engine-ignition.mp3';
 import f1FlybySound from '/audio/f1-flyby.mp3';
 import useIsMobile from './hooks/useIsMobile'; // Added
+import useParallax from './hooks/useParallax'; // Added
 import './style.css';
 
 function App() {
+  useParallax(); // Call the hook
   const isMobile = useIsMobile(); // Added
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCaseStudyId, setSelectedCaseStudyId] = useState<string | null>(null); // Modified
@@ -93,6 +96,7 @@ function App() {
 
   return (
     <>
+      <WornWoodenDeskBackground />
       <a href="#main-content" className="skip-to-content">Skip to main content</a>
       {selectedCaseStudyId && isMobile ? (
         <CaseStudyPage caseStudy={selectedCaseStudy} onClose={handleCloseModal} isMobile={isMobile} />
@@ -106,6 +110,8 @@ function App() {
             <About />
             <FileCabinet />
             <Footer />
+            {/* Dummy section for sufficient scrollable content */}
+            <div style={{ height: '200vh' }}></div>
           </Layout>
           <CaseStudyModal isOpen={isModalOpen} onClose={handleCloseModal} caseStudy={selectedCaseStudy} />
         </>

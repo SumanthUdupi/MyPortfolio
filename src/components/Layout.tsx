@@ -1,30 +1,16 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import useIsMobile from '../hooks/useIsMobile';
+import { useTheme } from '../context/ThemeContext'; // Import useTheme
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    if (isMobile) return;
-
-    const handleMouseMove = (event: MouseEvent) => {
-      document.documentElement.style.setProperty('--mouse-x', `${event.clientX}px`);
-      document.documentElement.style.setProperty('--mouse-y', `${event.clientY}px`);
-      document.documentElement.style.setProperty('--mouse-x-pct', `${(event.clientX / window.innerWidth) * 100}%`);
-      document.documentElement.style.setProperty('--mouse-y-pct', `${(event.clientY / window.innerHeight) * 100}%`);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [isMobile]);
+  const { darkMode } = useTheme(); // Use useTheme hook
 
   return (
-    <>
-      <div id="bg-layers">
-        <div id="bg-texture"></div>
+    <div id="background-container" className={`relative z-0 min-h-screen transition-colors duration-500
+      ${darkMode ? 'bg-gradient-to-br from-stone-900 via-indigo-950 to-stone-800' : 'bg-gradient-to-br from-yellow-50 via-amber-100 to-stone-100'}`}>
+      <div id="bg-layers" className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div id="bg-texture" className={`${darkMode ? 'opacity-20' : 'opacity-50'}`}></div>
         <svg id="coffee-ring" className="bg-item" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(111,78,55,0.3)" strokeWidth="2"/>
           <circle cx="50" cy="50" r="25" fill="rgba(111,78,55,0.05)"/>
@@ -76,12 +62,16 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 <li>Find that Smiths record</li>
             </ul>
         </div>
+        {/* NEW: Ruler */}
+        <img id="ruler" src="/images/ruler.svg" className="bg-item" style={{ top: '10%', right: '10%', width: '180px', transform: 'rotate(10deg)', opacity: 0.5 }} alt="Ruler" />
+        {/* NEW: Color Swatches */}
+        <img id="color-swatches" src="/images/color-swatches.svg" className="bg-item" style={{ bottom: '25%', left: '30%', width: '120px', transform: 'rotate(-8deg)', opacity: 0.6 }} alt="Color Swatches" />
       </div>
       <div id="click-ripple-container"></div>
-      <main id="main-content" className="max-w-7xl mx-auto p-4 sm:p-8 md:p-12">
+      <main id="main-content" className="relative z-10 max-w-7xl mx-auto p-4 sm:p-8 md:p-12">
         {children}
       </main>
-    </>
+    </div>
   );
 };
 
