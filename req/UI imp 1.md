@@ -1,83 +1,177 @@
-# Design Document 1: Strategic Overview & Implementation Roadmap
+# Design Document: Phase 1 Quick Wins
+## Accessibility & Performance Foundation Improvements
 
-## Executive Context
+### Document Overview
 
-Sumanth Udupi's Digital Atelier Portfolio represents a bold creative vision that successfully establishes a memorable brand identity through its innovative wooden desk metaphor and handwritten typography. The site demonstrates strong technical foundations with React and TypeScript, comprehensive dark mode support, and thoughtful attention to visual storytelling. However, as we move deeper into 2025, the portfolio has significant opportunities to align with contemporary web standards, improve accessibility for all users, and optimize performance across devices.
+This design document outlines ten foundational improvements for Sumanth Udupi's portfolio website that can be implemented quickly while delivering immediate, measurable impact. These changes focus on accessibility compliance, performance optimization, and usability enhancements that form the bedrock of a professional web presence.
 
-This document serves as the strategic blueprint for transforming the portfolio from a visually charming showcase into a best-in-class digital experience that balances creativity with usability, performance with personality, and innovation with accessibility.
+The philosophy behind Phase 1 centers on the principle that small, strategic changes often yield disproportionately large benefits. By addressing fundamental issues in text readability, image optimization, and interaction design, we establish a solid foundation upon which more sophisticated features can be built.
 
-## Current State Assessment
+### Project Context & Rationale
 
-### What's Working Well
+The current portfolio demonstrates creative vision through its worn wooden desk metaphor and handwritten typography, creating a memorable personal brand. However, several technical oversights limit its accessibility to users with disabilities, slow down page load times, and create friction in common user interactions. These issues, while individually minor, compound to create barriers that prevent some users from fully experiencing the portfolio's content.
 
-The portfolio's greatest strength lies in its cohesive brand storytelling. The desk metaphor isn't merely decorative—it creates an immersive environment that communicates personality before a single word is read. The handwritten typography choices (Kalam and Patrick Hand fonts) immediately establish a human, approachable tone that differentiates the portfolio from generic templates. The extensive animation system, featuring everything from subtle flutter effects on sticky notes to parallax scrolling on the desk background, demonstrates sophisticated technical execution and attention to detail.
+Modern web standards have evolved significantly, with organizations like the World Wide Web Consortium establishing clear guidelines through WCAG 2.1 that ensure digital content remains accessible to all users regardless of ability. Search engines also reward sites that load quickly and provide excellent user experiences, making these improvements doubly valuable from both ethical and practical standpoints.
 
-The dark mode implementation deserves particular recognition. Rather than treating it as an afterthought, the design system thoughtfully adapts the entire desk metaphor for low-light environments, maintaining the warm, inviting aesthetic while respecting user preferences. The modular React component architecture suggests good development practices, with clear separation of concerns between presentation and logic.
+### Goals & Success Metrics
 
-### Critical Gaps
+The primary goal of Phase 1 is to eliminate low-hanging technical debt while establishing measurable improvements in three critical areas: accessibility, performance, and user experience quality.
 
-Despite these strengths, several fundamental issues prevent the portfolio from reaching its full potential. The readability challenges stem from the tension between creative expression and functional communication. While handwritten fonts create immediate personality, they become fatiguing when reading longer case study content. The current implementation doesn't adequately distinguish between headline typography (where personality matters most) and body copy (where clarity is paramount).
+**Accessibility Goals:**
+We aim to achieve partial WCAG 2.1 AA compliance, targeting a Lighthouse accessibility score increase from the current baseline to at least 90 out of 100. This means ensuring that users who rely on screen readers, keyboard navigation, or other assistive technologies can fully interact with the portfolio. Every improvement in this category represents real users who previously couldn't access the content now being able to do so.
 
-Accessibility compliance remains partial rather than comprehensive. While the site includes positive indicators like skip links and reduced motion support, critical elements lack proper ARIA attributes, keyboard navigation has gaps, and screen reader compatibility hasn't been thoroughly verified. These aren't minor oversights—they represent potential barriers for significant portions of your audience, including colleagues with disabilities and hiring managers evaluating your attention to inclusive design.
+**Performance Goals:**
+Our target is reducing initial page load time by 20-30% and improving Core Web Vitals scores, particularly Largest Contentful Paint (LCP) and Cumulative Layout Shift (CLS). These metrics directly correlate with user satisfaction and search engine rankings. When users visit a portfolio site, they're forming impressions within seconds, and every millisecond counts toward that critical first impression.
 
-Performance optimization hasn't kept pace with the ambition of the animation system. The extensive use of CSS keyframes, parallax effects, and high-resolution background graphics creates potential performance bottlenecks, particularly on mid-range mobile devices. Core Web Vitals metrics likely show concerning First Input Delay and Cumulative Layout Shift scores that directly impact both user experience and search engine rankings.
+**User Experience Goals:**
+We're targeting a 15% improvement in readability scores measured through contrast ratio analysis and typography metrics. Additionally, we aim to eliminate all broken links and ensure 100% of interactive elements meet minimum touch target size requirements for mobile devices.
 
-## Strategic Priorities
+### Detailed Improvement Specifications
 
-### Priority 1: Accessibility Foundation (Weeks 1-2)
+#### 1. Text Shadow Standardization
 
-Accessibility isn't merely about legal compliance—it's about demonstrating your understanding of inclusive design principles, a critical competency for a Business Analyst specializing in human-centered solutions. The immediate focus should be ensuring full WCAG 2.1 AA compliance through systematic improvements to keyboard navigation, screen reader support, and focus management.
+**Current Problem:**
+The existing CSS implementation uses inconsistent text shadow values across different components and theme modes. Some text elements have shadows that are too heavy, creating readability issues especially for users with visual processing difficulties or those viewing the site in bright sunlight on mobile devices. The inconsistency also creates a slightly unprofessional appearance where some text appears to "float" more than others without clear design intent.
 
-This means conducting a comprehensive audit with actual assistive technologies, not just automated checkers. Every interactive element needs proper ARIA labels, every modal needs correct dialog semantics, and every animation needs respect for users who have enabled reduced motion preferences. The goal is ensuring that someone navigating entirely by keyboard or screen reader can access 100% of your portfolio's content and functionality.
+**Solution Design:**
+We need to establish a unified text shadow system that serves clear purposes: creating subtle depth for headings while ensuring body text remains crisp and readable. The new system will use a three-tier approach: no shadow for body text, a subtle shadow for secondary headings, and a slightly more pronounced shadow only for large hero text where the creative effect enhances rather than hinders readability.
 
-### Priority 2: Performance Optimization (Weeks 2-3)
+The specific implementation involves updating the `.text-shadow-scribbled` class to use `text-shadow: 1px 1px 2px rgba(0,0,0,0.1)` in light mode and `text-shadow: 1px 1px 2px rgba(255,255,255,0.05)` in dark mode. These values were chosen through testing to provide just enough depth to separate text from backgrounds without creating blur that reduces character definition.
 
-Performance directly impacts how users perceive your technical sophistication. A beautifully designed portfolio that loads slowly or feels sluggish during interaction undermines the very expertise you're showcasing. The optimization strategy should focus on three key areas: asset optimization (compressing images and GIFs, implementing next-generation formats like WebP), animation refinement (reducing animation complexity on mobile, implementing passive event listeners), and code splitting (breaking the bundle into smaller chunks that load on demand).
+**Implementation Strategy:**
+Open the `src/index.css` file and locate lines 177-190 where text shadow classes are defined. Replace all existing text-shadow properties with the standardized values. Then audit each component file to ensure no inline shadow styles override this system. Test the changes across both light and dark modes, viewing on actual devices rather than just browser simulation to catch subtle rendering differences.
 
-The target metrics should be achieving Lighthouse scores of 90+ across all categories, particularly Performance and Best Practices. This means First Contentful Paint under 1.5 seconds, Time to Interactive under 3 seconds, and Cumulative Layout Shift under 0.1—all measured on simulated 3G mobile connections.
+#### 2. Accessible Background SVG Implementation
 
-### Priority 3: Visual Refinement (Weeks 3-5)
+**Current Problem:**
+The decorative SVG elements that create the worn wooden desk texture lack proper accessibility attributes. Screen readers attempt to parse these SVGs as meaningful content, creating confusion for visually impaired users who hear incomprehensible descriptions of vector paths instead of the actual portfolio content they're seeking.
 
-With the technical foundation solidified, visual refinement focuses on elevating the design system to meet contemporary standards while preserving the unique personality. This involves introducing a more sophisticated typography hierarchy that reserves handwritten fonts for headers and navigation while employing highly legible sans-serif options for body content. The spacing system needs standardization through design tokens, ensuring mathematical consistency across all components rather than arbitrary values.
+**Solution Design:**
+We need to explicitly mark decorative elements as such using ARIA (Accessible Rich Internet Applications) attributes. The `aria-hidden="true"` attribute tells assistive technologies to completely ignore these elements. For any SVGs that do convey meaning (such as icons), we'll ensure they have descriptive alt text or aria-label attributes that explain their purpose in context.
 
-Color palette expansion should introduce more vibrant, purposeful accent colors that improve visual hierarchy and call-to-action prominence. The desk metaphor can be enhanced through refined textures, improved shadows that better simulate physical depth, and micro-interactions that make the interface feel more responsive and alive.
+This approach follows the fundamental principle of accessibility: distinguish between decoration and content, then handle each appropriately. Decoration should be invisible to assistive technologies, while meaningful images must have text alternatives.
 
-### Priority 4: Experience Enhancement (Weeks 5-7)
+**Implementation Strategy:**
+Navigate to `src/components/WornWoodenDeskBackground.tsx` and add `aria-hidden="true"` to the main SVG element. Review all other SVG usage throughout the codebase, categorizing each as either decorative or meaningful. For decorative SVGs, add the aria-hidden attribute. For meaningful SVGs like the LinkedIn icon in the contact section, ensure proper aria-label attributes describe the link destination rather than the image itself.
 
-User experience improvements should focus on reducing friction and increasing engagement through thoughtful feature additions. A search and filter system for projects addresses the practical challenge of portfolio growth over time. Enhanced navigation with breadcrumbs and progress indicators helps users maintain context during deep dives into case studies. Form validation and error handling demonstrate attention to edge cases and user support.
+#### 3. Image Optimization Protocol
 
-The mobile experience deserves particular attention, with refined touch targets, improved gesture support, and streamlined navigation that adapts to smaller screens without sacrificing functionality. Each interaction should feel purposeful and responsive, providing immediate feedback that confirms user actions.
+**Current Problem:**
+The GIF images stored in the `public/images/` directory are unoptimized, often containing unnecessary metadata and using inefficient compression. Large image files create the most significant bottleneck in page load times, particularly on mobile networks where users may have limited bandwidth. A 2MB GIF that could be 600KB through proper optimization forces users to wait longer and potentially consume expensive mobile data unnecessarily.
 
-### Priority 5: Innovation Layer (Weeks 7-10)
+**Solution Design:**
+We'll implement a two-stage optimization process. First, use lossless compression tools like ImageOptim or TinyPNG to reduce file sizes by 30-50% without any visible quality degradation. These tools strip metadata, optimize color palettes, and apply more efficient compression algorithms. Second, for GIFs used primarily for static display, consider converting them to modern image formats like WebP which provide superior compression while maintaining quality.
 
-The final phase introduces cutting-edge features that position the portfolio at the forefront of web development trends. Progressive Web App conversion enables offline access and app-like installation, demonstrating familiarity with modern deployment strategies. AI-powered recommendations create personalized navigation paths based on user interests and behavior patterns. Voice search integration and accessibility features show awareness of emerging interaction paradigms.
+The optimization should be part of the build process eventually, but initially we'll process all existing images manually and establish guidelines for any new images added to the project.
 
-These innovations shouldn't feel like gimmicks—they should solve real user needs while showcasing technical versatility. The key is selective implementation, choosing features that align with your professional brand and provide genuine value rather than adding complexity for its own sake.
+**Implementation Strategy:**
+Download and install ImageOptim or access TinyPNG's web interface. Process each GIF in the public/images/ directory, saving the optimized versions with the same filenames. Document the size reductions achieved. For images over 500KB even after compression, evaluate whether WebP conversion would be beneficial, ensuring fallback options for older browsers. Update the project documentation with image optimization guidelines for future content additions.
 
-## Implementation Philosophy
+#### 4. Keyboard Navigation Focus Indicators
 
-### Quality Over Speed
+**Current Problem:**
+While the site technically supports keyboard navigation, the visual indicators showing which element currently has focus rely entirely on browser defaults. These defaults vary significantly across browsers and are often barely visible, especially on the site's textured backgrounds. Users who cannot use a mouse, including many people with motor disabilities, rely heavily on these focus indicators to know where they are on the page.
 
-The proposed ten-week timeline provides breathing room for thoughtful implementation rather than rushed execution. Each improvement should be thoroughly tested across browsers, devices, and assistive technologies before deployment. It's better to fully complete Phases 1-3, creating a solid, professional foundation, than to partially implement all five phases and create technical debt.
+**Solution Design:**
+We'll create custom focus styles that are highly visible, aesthetically consistent with the site's design language, and meet WCAG requirements for contrast ratios. The focus indicator will use a 2px solid outline in the site's cyan accent color, positioned 2px outside the element boundary to avoid overlapping with the element's content. This combination ensures visibility while maintaining the hand-crafted aesthetic of the design.
 
-### Measure Everything
+The `:focus-visible` pseudo-class ensures these prominent indicators only appear when users navigate via keyboard, not when clicking with a mouse, providing the best experience for all interaction modes.
 
-Before beginning improvements, establish baseline metrics for key performance indicators: Lighthouse scores, Core Web Vitals, accessibility compliance percentage, and user engagement metrics like time on page and bounce rate. After each phase, remeasure these indicators to validate that changes are producing intended effects. This data-driven approach demonstrates analytical thinking and provides concrete evidence of improvement for potential employers.
+**Implementation Strategy:**
+In `src/index.css`, create a global focus style rule that applies to all interactive elements: `button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid #0891b2; outline-offset: 2px; border-radius: 2px; }`. Test keyboard navigation through the entire site, ensuring each interactive element shows the focus indicator clearly. Pay special attention to complex components like modals where focus management requires extra care.
 
-### Maintain Personality
+#### 5. Mobile Animation Optimization
 
-Every optimization and refinement should be evaluated against a critical question: does this preserve the unique personality that makes this portfolio memorable? The goal isn't to create a generic, ultra-optimized template—it's to elevate the existing creative vision to professional standards. The desk metaphor, handwritten touches, and playful animations should remain central to the experience, simply refined to work better for all users across all devices.
+**Current Problem:**
+The flutter animation that creates the charming "papers slightly moving" effect runs at full intensity on mobile devices, where both processing power and battery life are more constrained. Continuous animations can drain mobile batteries and cause frame drops on lower-end devices, creating a paradox where the feature meant to delight users instead frustrates them with laggy interactions.
 
-## Resource Allocation
+**Solution Design:**
+We'll implement a responsive animation system that reduces animation frequency and intensity on smaller screens. The mobile version will still maintain the creative personality but use gentler transformations that require less processing power. Specifically, we'll reduce the rotation angles and increase the duration, creating slower, more subtle movement that feels natural while being computationally lighter.
 
-Assuming approximately 10-15 hours per week of dedicated development time, the ten-week roadmap is achievable while maintaining quality standards. Phases 1-2 (accessibility and performance) should receive the most intensive focus, as they provide the greatest return on investment in terms of professional perception and user satisfaction. Phase 3 (visual refinement) offers opportunities for creative exploration within structured constraints. Phases 4-5 can be approached more flexibly, prioritizing features that best align with career goals and technical interests.
+This demonstrates respect for users' device capabilities and battery life, aligning with sustainable UX principles that consider the environmental and practical costs of web features.
 
-For aspects requiring specialized expertise—such as comprehensive accessibility testing or performance optimization deep dives—consider allocating a small budget for professional audit services or consulting hours. The investment in expert guidance often saves more time than it costs by avoiding common pitfalls and establishing best practices from the start.
+**Implementation Strategy:**
+In `src/index.css`, locate the `@keyframes flutter` definition around lines 322-327. After the keyframe definition, add a media query: `@media (max-width: 767px) { @keyframes flutter { 0%, 100% { transform: rotate(1deg); } 50% { transform: rotate(-0.5deg); } } }`. This halves the rotation range on mobile. Additionally, consider adjusting animation durations to be 1.5x longer on mobile devices to further reduce computational requirements.
 
-## Success Metrics
+#### 6. Loading State Enhancement
 
-At completion, the portfolio should achieve measurable improvements across four dimensions. Technical excellence means Lighthouse scores above 90 in all categories, full WCAG 2.1 AA compliance verified by assistive technology testing, and Core Web Vitals in the "good" range. User engagement should show reduced bounce rates, increased time spent on case studies, and higher click-through rates on project details. Professional impact comes through positive feedback from peers and interviewers, with the portfolio becoming a conversation starter rather than just a credential. Finally, personal satisfaction matters—the portfolio should feel like a genuine representation of your capabilities and aesthetic sensibilities, something you're genuinely proud to share.
+**Current Problem:**
+When project images load, they appear suddenly, causing layout shift and a jarring visual experience. The current `animate-pulse` placeholder is functional but generic, not reflecting the site's unique personality. Users on slower connections stare at these placeholders for several seconds, and the experience should feel intentional rather than like a loading error.
 
-## Next Steps
+**Solution Design:**
+We'll create custom loading skeletons that match the project card's visual structure, using the same paper texture and torn-edge aesthetic. The skeleton will show placeholder shapes for the image, title, and description areas, animated with a subtle "shimmer" effect that suggests content is arriving. This approach sets user expectations appropriately while maintaining the design's cohesive aesthetic.
 
-Begin by reviewing the remaining four design documents, each detailing specific implementation approaches for their respective domains. Schedule a realistic timeline that accounts for learning curves and inevitable complications. Set up proper version control branches for each phase to enable safe experimentation and easy rollback if needed. And most importantly, approach this transformation not as tedious work but as an opportunity to demonstrate the very skills you're showcasing—user research, systematic problem-solving, and human-centered design thinking applied to your own professional presence.
+**Implementation Strategy:**
+In `src/components/ProjectCard.tsx`, create a new LoadingSkeleton component that renders when images haven't loaded. Use Tailwind utility classes to create rectangular shapes with the `.paper` class applied. Implement a shimmer animation using a gradient that moves across the skeleton. Replace the current `animate-pulse` with this custom skeleton, ensuring it maintains the exact dimensions of the final content to prevent layout shift.
+
+#### 7. Link Validation & URL Correction
+
+**Current Problem:**
+Several case study entries in `src/data/caseStudies.ts` contain placeholder URLs like `https://placehold.co/...` or broken links that return 404 errors. When users click these expecting to see project details, they encounter error pages, breaking trust and creating frustration. Even one broken link can make a professional portfolio appear neglected or incomplete.
+
+**Solution Design:**
+We'll audit every external link in the data files and components, categorizing them as active, placeholder, or broken. Active links remain unchanged. Placeholders should either be replaced with actual project URLs if available, or the entire link element should be removed with a note that external resources aren't available. Broken links need investigation to determine whether they can be updated to current URLs or should be removed.
+
+This process establishes a maintenance protocol for keeping links current, recognizing that link rot is an ongoing concern for any website.
+
+**Implementation Strategy:**
+Open `src/data/caseStudies.ts` and examine every URL. Use browser developer tools to test each link, documenting the results. For placeholder URLs, either replace with real URLs or remove the link component from the case study card template. Add comments in the code noting which case studies lack external links and why. Consider adding automated link checking to the deployment pipeline to catch future issues.
+
+#### 8. Touch Target Size Compliance
+
+**Current Problem:**
+Some interactive elements, particularly buttons and links within the toolkit tags, fall below the minimum 44x44 pixel touch target size recommended by Apple's Human Interface Guidelines and required by WCAG 2.1 AA standards. On mobile devices, users frequently tap the wrong element when targets are too small, creating frustration and errors that damage the user experience.
+
+**Solution Design:**
+We'll establish a minimum touch target size of 44x44 pixels for all interactive elements, using padding to expand smaller elements to this size. The visual appearance can remain compact while the interactive area extends beyond the visible boundaries. This approach maintains the site's aesthetic while ensuring reliable mobile interaction.
+
+**Implementation Strategy:**
+In `src/index.css`, add a `.cv-button` class rule ensuring minimum dimensions: `.cv-button { min-height: 44px; min-width: 44px; padding: 12px 24px; }`. Apply this class to all button elements. For smaller interactive elements like toolkit tags, add padding to expand their clickable area without changing their visual size. Use browser developer tools to overlay touch target visualizations, ensuring every interactive element meets the minimum.
+
+#### 9. SEO Meta Description Implementation
+
+**Current Problem:**
+The `index.html` file lacks a meta description tag, meaning search engines either generate their own descriptions from page content or show no description at all in search results. A compelling meta description can improve click-through rates from search results by 20% or more, as it's often the first substantive content potential visitors read about the portfolio.
+
+**Solution Design:**
+We'll craft a concise, keyword-rich meta description that accurately summarizes Sumanth's professional focus and unique value proposition. The description should be 150-160 characters to avoid truncation in search results, include primary keywords naturally, and create interest that encourages clicks. It should reflect the portfolio's personality while maintaining professional credibility.
+
+**Implementation Strategy:**
+Open `index.html` and add within the `<head>` section: `<meta name="description" content="Sumanth Udupi - Business Analyst specializing in ESG, EHS, and QMS solutions with a passion for human-centered design and data-driven insights." />`. Test how this description appears in Google's search result preview tools. Consider creating different descriptions for different pages if the site expands to multiple pages in the future.
+
+#### 10. React Error Boundary Implementation
+
+**Current Problem:**
+If any React component encounters an error during rendering, the entire application crashes, leaving users with a blank white screen and no information about what went wrong. This creates a terrible user experience and provides no mechanism for graceful degradation or recovery.
+
+**Solution Design:**
+We'll implement React Error Boundaries around major application sections, allowing errors to be contained and handled gracefully. When an error occurs, instead of crashing, the application will show a friendly error message explaining what happened and offering options like reloading the page or navigating to the home section. This demonstrates professional error handling and maintains user trust even when things go wrong.
+
+Error boundaries also log errors to the console for debugging while keeping the error details hidden from users who don't need technical information.
+
+**Implementation Strategy:**
+Create a new file `src/components/ErrorBoundary.tsx` implementing a React class component with `componentDidCatch` and `getDerivedStateFromError` lifecycle methods. The component should render children normally but switch to an error UI when catching errors. Wrap major sections of the app in this component, particularly around the project display and case study modal components where data-driven errors are most likely. Design an error message component that matches the site's aesthetic, perhaps using a "crumpled paper" visual metaphor.
+
+### Testing & Validation Strategy
+
+Each improvement requires specific testing to verify both functionality and impact. For accessibility changes, use automated tools like axe DevTools and Lighthouse, but also conduct manual testing with actual screen readers like NVDA or VoiceOver. For performance improvements, measure before and after metrics using Chrome DevTools and WebPageTest, ensuring tests run on both high-end devices and simulated slow networks to understand the full range of user experiences.
+
+Conduct cross-browser testing to ensure focus indicators, animations, and layout adjustments work consistently across Chrome, Firefox, Safari, and Edge. Test on actual mobile devices rather than just browser simulation, as touch interactions and performance characteristics differ significantly from desktop emulation.
+
+### Risk Assessment & Mitigation
+
+The risks in Phase 1 are minimal since these changes address fundamental issues rather than implementing complex new features. The primary risk involves unintended consequences from CSS changes affecting unexpected elements. Mitigate this through comprehensive visual regression testing, comparing screenshots of all pages before and after changes.
+
+A secondary risk involves performance changes not providing the expected benefits due to factors beyond these implementations, such as hosting server speed or CDN configuration. Establish baseline metrics before beginning work and measure incrementally to isolate the impact of each change.
+
+### Timeline & Implementation Order
+
+These ten improvements can be implemented in approximately four to six hours of focused development work. The suggested order prioritizes changes with dependencies and those that enable easier testing of subsequent changes:
+
+Begin with link validation and error boundaries, establishing stability and trust in the development process. Next, implement accessibility improvements (alt text, focus indicators, touch targets) since these are independent of each other and can be tested immediately. Then proceed to visual refinements (text shadows, loading states), which benefit from the stable foundation. Finally, optimize performance (images, animations, SEO), measuring the cumulative impact of all previous changes.
+
+### Success Measurement & Reporting
+
+After implementing all Phase 1 improvements, conduct a comprehensive audit comparing metrics to baseline measurements. Generate a report documenting accessibility score improvements, page load time reductions, and any user feedback received. This report establishes the business case for proceeding with subsequent phases while demonstrating the value of prioritizing foundational quality improvements.
+
+Monitor analytics for changes in user behavior metrics like bounce rate, time on page, and interaction rates, recognizing that improvements may take several weeks to show measurable effects as search engines re-index the site and users return with improved experiences.
