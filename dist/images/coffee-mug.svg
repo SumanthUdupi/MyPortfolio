@@ -1,0 +1,12 @@
+<svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mug body -->
+  <path d="M10 35 Q10 30 15 30 L30 30 Q35 30 35 35 L35 45 Q35 47 33 47 L12 47 Q10 47 10 45 Z" fill="#8B4513" stroke="#654321" stroke-width="1"/>
+  <!-- Handle -->
+  <path d="M35 37 Q40 37 40 42 Q40 45 35 45" fill="none" stroke="#654321" stroke-width="2"/>
+  <!-- Coffee -->
+  <ellipse cx="22.5" cy="38" rx="7.5" ry="4" fill="#654321"/>
+  <!-- Steam -->
+  <path d="M18 25 Q16 20 18 15" stroke="#FFFFFF" stroke-width="1.5" fill="none" opacity="0.8"/>
+  <path d="M22 25 Q20 18 22 12" stroke="#FFFFFF" stroke-width="1.5" fill="none" opacity="0.8"/>
+  <path d="M26 25 Q24 22 26 17" stroke="#FFFFFF" stroke-width="1.5" fill="none" opacity="0.8"/>
+</svg>

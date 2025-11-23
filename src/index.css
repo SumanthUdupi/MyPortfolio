@@ -119,6 +119,29 @@ a, button {
   }
 }
 
+/* User-controlled reduced motion toggle */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  animation-delay: -0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Respect system reduced motion preferences for new animations */
+@media (prefers-reduced-motion: reduce) {
+  .entrance-rotate-slide,
+  .entrance-jiggle,
+  .entrance-slide,
+  .entrance-flutter,
+  .entrance-page-flip,
+  .long-press-easter-egg {
+    animation: none !important;
+  }
+}
+
 /* NEW: Part 3.1 - Sophisticated Shadow System */
 :root {
   --shadow-contact: 0 1px 2px rgba(0,0,0,0.08);
@@ -130,11 +153,41 @@ a, button {
 
 /* 1. Typography as Character */
 .font-body { font-family: var(--font-body); }
-.font-display { font-family: 'Kalam', cursive; }
-.font-hand { font-family: 'Patrick Hand', cursive; }
+.font-display {
+  font-family: 'Kalam', cursive;
+  font-variation-settings: 'wght' 400;
+}
+.font-hand {
+  font-family: 'Patrick Hand', cursive;
+  font-variation-settings: 'wght' 400;
+}
 .font-mono { font-family: 'Patrick Hand', cursive; }
 .font-dancing { font-family: 'Dancing Script', cursive; }
 .font-gochi { font-family: 'Gochi Hand', cursive; }
+
+/* Variable font weights for Kalam and Patrick Hand */
+.font-display-light { font-variation-settings: 'wght' 300; }
+.font-display-normal { font-variation-settings: 'wght' 400; }
+.font-display-bold { font-variation-settings: 'wght' 700; }
+.font-hand-light { font-variation-settings: 'wght' 300; }
+.font-hand-normal { font-variation-settings: 'wght' 400; }
+.font-hand-bold { font-variation-settings: 'wght' 700; }
+
+/* Scribbled text-shadow variants for accent text */
+.text-shadow-scribbled {
+  text-shadow:
+    1px 1px 0px rgba(0,0,0,0.1),
+    2px 2px 0px rgba(255,255,255,0.5),
+    3px 3px 0px rgba(0,0,0,0.05),
+    4px 4px 0px rgba(255,255,255,0.3);
+}
+.text-shadow-scribbled-dark {
+  text-shadow:
+    1px 1px 0px rgba(255,255,255,0.1),
+    2px 2px 0px rgba(0,0,0,0.5),
+    3px 3px 0px rgba(255,255,255,0.05),
+    4px 4px 0px rgba(0,0,0,0.3);
+}
 
 /* 2. The "Sticky Note" (for the Hero) - UPDATED Part 1.1 */
 .sticky-note {
@@ -162,9 +215,10 @@ a, button {
             calc(var(--mouse-x, 0) * 0.015),
             calc(var(--mouse-y, 0) * 0.015)
         )
-        translateY(calc(var(--scroll-y, 0) * -0.15)) /* Scroll parallax */
-        rotate(2deg);    transition: transform 0.1s linear, box-shadow 0.3s ease;
+        rotate(2deg);
+    transition: transform 0.1s linear, box-shadow 0.3s ease;
     animation: flutter 15s infinite ease-in-out;
+    will-change: transform;
 }
 
 .sticky-note:hover {
@@ -260,9 +314,9 @@ a, button {
             calc(var(--mouse-x, 0) * -0.01),
             calc(var(--mouse-y, 0) * -0.01)
         )
-        translateY(calc(var(--scroll-y, 0) * -0.08)) /* Scroll parallax */
         rotate(-1deg);
     transition: transform 0.1s linear;
+    will-change: transform;
 }
 /* 6. Ambient "Flutter" Animation */
 @keyframes flutter {
@@ -432,9 +486,9 @@ a, button {
             translate(
                 calc(var(--mouse-x, 0) * -0.005),
                 calc(var(--mouse-y, 0) * -0.005)
-            )
-            translateY(calc(var(--scroll-y, 0) * 0.05)); /* Scroll parallax (moves slower than foreground) */
-        transition: transform 0.1s linear;}
+            );
+        transition: transform 0.1s linear;
+        will-change: transform;}
 /* NEW: Dark Mode Desk Texture */
 .dark #bg-texture {
     background: 
@@ -524,7 +578,6 @@ a, button {
             calc(var(--mouse-x, 0) * 0.015),
             calc(var(--mouse-y, 0) * 0.015)
         )
-        translateY(calc(var(--scroll-y, 0) * -0.1px)) /* Scroll parallax */
         rotate(10deg);
     animation: gentle-float 20s ease-in-out infinite alternate; /* Applied animation */
 }.dark #ruler {
@@ -542,7 +595,6 @@ a, button {
             calc(var(--mouse-x, 0) * -0.01),
             calc(var(--mouse-y, 0) * -0.01)
         )
-        translateY(calc(var(--scroll-y, 0) * -0.05px)) /* Scroll parallax */
         rotate(-8deg);
     animation: gentle-float 22s ease-in-out infinite alternate; /* Applied animation */
 }.dark #color-swatches {
@@ -560,9 +612,7 @@ a, button {
         translate(
             calc(var(--mouse-x, 0) * 0.01),
             calc(var(--mouse-y, 0) * 0.01)
-        )
-        translateY(calc(var(--scroll-y, 0) * -0.07px)) /* Scroll parallax */
-        rotate(calc(var(--scroll-y, 0) * 0.05deg));
+        );
     /* UPDATED: Parallax cut by 75% */
     transition: transform 0.1s linear;
 }/* NEW: Dark Mode Coffee Ring - Adjusted for copper/brass glimmer */
@@ -588,9 +638,7 @@ a, button {
         translate(
             calc(var(--mouse-x, 0) * 0.02),
             calc(var(--mouse-y, 0) * 0.02)
-        )
-        translateY(calc(var(--scroll-y, 0) * -0.12px)) /* Scroll parallax */
-        rotate(calc(var(--scroll-y, 0) * 0.02deg));
+        );
     transition: transform 0.1s linear;
 }/* NEW: Dark Mode Sketchbook */
 .dark #sketchbook rect:first-child {
@@ -617,9 +665,7 @@ a, button {
         translate(
             calc(var(--mouse-x, 0) * 0.025),
             calc(var(--mouse-y, 0) * 0.025)
-        )
-        translateY(calc(var(--scroll-y, 0) * -0.15px)) /* Scroll parallax */
-        rotate(calc(var(--scroll-y, 0) * -0.01deg));
+        );
     transition: transform 0.1s linear;
 }/* NEW: Dark Mode Pen - Adjusted for metallic glimmer */
 .dark #pen rect {
@@ -641,7 +687,6 @@ a, button {
             calc(var(--mouse-x, 0) * -0.007),
             calc(var(--mouse-y, 0) * -0.007)
         )
-        translateY(calc(var(--scroll-y, 0) * 0.08)) /* Scroll parallax (moves slower) */
         rotate(-30deg);
     /* UPDATED: Slower sway */
     animation: sway 20s infinite ease-in-out;
@@ -652,6 +697,49 @@ a, button {
 }
 
 /* Layer 7 Items (Floating) */
+/* Additional floating sticky notes for cluttered desk effect */
+.bg-sticky-note-1 {
+  position: absolute;
+  top: 30%;
+  right: 20%;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #fef9c3 0%, #fde68a 100%);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transform: rotate(15deg) scale(0.8);
+  z-index: 5;
+  animation: gentle-float 18s ease-in-out infinite alternate;
+  opacity: 0.7;
+}
+
+.bg-sticky-note-2 {
+  position: absolute;
+  bottom: 40%;
+  left: 25%;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transform: rotate(-10deg) scale(0.7);
+  z-index: 6;
+  animation: gentle-float 22s ease-in-out infinite alternate;
+  opacity: 0.6;
+}
+
+.bg-sticky-note-3 {
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transform: rotate(25deg) scale(0.9);
+  z-index: 4;
+  animation: gentle-float 25s ease-in-out infinite alternate;
+  opacity: 0.5;
+}
+
 /* REMOVED: .bg-sticky-note */
 .bg-sticky-note { display: none; }
 
@@ -726,16 +814,13 @@ a, button {
         translate(
             calc(var(--mouse-x, 0) * -0.003),
             calc(var(--mouse-y, 0) * -0.003)
-        )
-        translateY(calc(var(--scroll-y, 0) * 0.02)); /* Scroll parallax (moves very slowly) */
+        );
     transition: transform 0.1s linear;
 }
 
 /* New rule for parallax layers in WornWoodenDeskBackground */
 .parallax-layer {
   will-change: transform;
-  transition: transform 0.1s linear;
-  transform: translateY(calc(var(--scroll-y, 0) * var(--parallax-speed)));
 }/* NEW: Dark Mode Dust */
 .dark .dust-mote {
     background-color: rgba(180, 200, 255, 0.2); /* Cooler, ethereal white/blue */
@@ -828,7 +913,6 @@ a, button {
             calc(var(--mouse-x, 0) * 0.018),
             calc(var(--mouse-y, 0) * 0.018)
         )
-        translateY(calc(var(--scroll-y, 0) * -0.13)) /* Scroll parallax */
         rotate(-15deg);
     transition: transform 0.1s linear;
 }/* NEW: Dark Mode Imperfections */
@@ -849,8 +933,7 @@ a, button {
         translate(
             calc(var(--mouse-x, 0) * -0.015),
             calc(var(--mouse-y, 0) * -0.015)
-        )
-        translateY(calc(var(--scroll-y, 0) * -0.09)); /* Scroll parallax */
+        );
     transition: transform 0.1s linear;
 }.dark #eraser-shavings {
     opacity: 0.3;
@@ -869,8 +952,7 @@ a, button {
         translate(
             calc(var(--mouse-x, 0) * 0.012),
             calc(var(--mouse-y, 0) * 0.012)
-        )
-        translateY(calc(var(--scroll-y, 0) * -0.06)); /* Scroll parallax */
+        );
     transition: transform 0.1s linear;
 }.dark #pencil-scribble path {
     stroke: #a8a29e;
@@ -999,6 +1081,42 @@ a, button {
   animation: jiggle-click 0.4s ease-in-out;
 }
 
+/* Micro-interactions: Button jiggle on hover */
+button:hover, .cv-button:hover, .tab-button:hover, .toolkit-tag:hover {
+  animation: jiggle-hover 0.6s ease-in-out;
+}
+
+/* Rubber stamp morph on click */
+button:active, .cv-button:active, .tab-button:active, .toolkit-tag:active {
+  transform: scale(0.95) rotate(-1deg);
+  transition: transform 0.1s ease;
+}
+
+/* Ripple effect on click */
+button, .cv-button, .tab-button, .toolkit-tag {
+  position: relative;
+  overflow: hidden;
+}
+
+button::after, .cv-button::after, .tab-button::after, .toolkit-tag::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+  pointer-events: none;
+}
+
+button:active::after, .cv-button:active::after, .tab-button:active::after, .toolkit-tag:active::after {
+  width: 300px;
+  height: 300px;
+}
+
 @keyframes jiggle {
   0%, 100% { transform: rotate(-2deg); }
   25% { transform: rotate(-5deg) scale(1.02); }
@@ -1012,6 +1130,81 @@ a, button {
   25% { transform: rotate(-5deg) scale(1.02); }
   50% { transform: rotate(1deg) scale(1.05); }
   75% { transform: rotate(-4deg) scale(1.02); }
+}
+
+/* Hover jiggle */
+@keyframes jiggle-hover {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-2px) rotate(1deg); }
+  50% { transform: translateY(0) rotate(-1deg); }
+  75% { transform: translateY(2px) rotate(0.5deg); }
+}
+
+/* Long press easter egg animation */
+.long-press-easter-egg {
+  animation: stamp-bounce 0.5s ease-in-out, glow-pulse 2s ease-in-out;
+}
+
+@keyframes stamp-bounce {
+  0% { transform: scale(1) rotate(-2deg); }
+  25% { transform: scale(1.1) rotate(-5deg); }
+  50% { transform: scale(1.2) rotate(0deg); }
+  75% { transform: scale(1.1) rotate(2deg); }
+  100% { transform: scale(1) rotate(-2deg); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(232, 121, 249, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(232, 121, 249, 0.8), 0 0 30px rgba(232, 121, 249, 0.4); }
+}
+
+/* Quirky entrance animations */
+.entrance-rotate-slide {
+  animation: rotate-slide-in 1s ease-out;
+}
+
+@keyframes rotate-slide-in {
+  0% { transform: rotate(-5deg) translateX(-50px); opacity: 0; }
+  100% { transform: rotate(0deg) translateX(0); opacity: 1; }
+}
+
+.entrance-jiggle {
+  animation: jiggle-entrance 0.8s ease-out;
+}
+
+@keyframes jiggle-entrance {
+  0% { transform: scale(0.9) rotate(-2deg); opacity: 0; }
+  50% { transform: scale(1.05) rotate(1deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.entrance-slide {
+  animation: slide-in-up 0.6s ease-out;
+}
+
+@keyframes slide-in-up {
+  0% { transform: translateY(30px) rotate(1deg); opacity: 0; }
+  100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+}
+
+.entrance-flutter {
+  animation: flutter-entrance 1.2s ease-out;
+}
+
+@keyframes flutter-entrance {
+  0% { transform: translateY(-20px) rotate(-3deg) scale(0.8); opacity: 0; }
+  50% { transform: translateY(10px) rotate(2deg) scale(1.1); opacity: 1; }
+  100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+}
+
+.entrance-page-flip {
+  animation: page-flip-in 1.2s ease-out;
+}
+
+@keyframes page-flip-in {
+  0% { transform: perspective(1000px) rotateY(-90deg) scale(0.8); opacity: 0; }
+  50% { transform: perspective(1000px) rotateY(-45deg) scale(1.1); opacity: 0.5; }
+  100% { transform: perspective(1000px) rotateY(0deg) scale(1); opacity: 1; }
 }
 
 .cv-button:active {
@@ -1048,7 +1241,7 @@ a, button {
 /* NEW: Dark Mode Toolkit Tag */
 .dark .toolkit-tag {
     background: #57534e; /* stone-500 */
-    color: #e7e5e4; /* stone-200 */
+    color: #f5f5f4; /* stone-100 */
     border-color: #78716c; /* stone-400 */
     /* NEW: Embossed text */
     text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
@@ -1676,7 +1869,6 @@ nav::after {
     /* UPDATED: Parallax cut */
     transform:
         translate(calc(var(--mouse-x, 0) * 0.015), calc(var(--mouse-y, 0) * 0.015))
-        translateY(calc(var(--scroll-y, 0) * -0.16)) /* Scroll parallax */
         rotate(-5deg);
     padding: 12px;
     padding-left: 20px;

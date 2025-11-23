@@ -7,6 +7,12 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      spacing: {
+        'phi': '1.618rem',
+        'phi-half': '0.809rem',
+        'phi-double': '3.236rem',
+        'phi-triple': '4.854rem',
+      },
       fontFamily: {
         'kalam': ['Kalam', 'cursive'],
         'caveat': ['Caveat', 'cursive'],
@@ -59,6 +65,23 @@ export default {
         rose: { // NEW color
           400: '#f472b6',
           600: '#e879f9',
+        },
+        // New harmonious additions
+        mint: '#a7f3d0',
+        lavender: '#ddd6fe',
+        coral: '#fb7185',
+        electric: '#3b82f6',
+        // Deep neutrals
+        charcoal: {
+          100: '#f7f7f7',
+          200: '#e0e0e0',
+          300: '#c7c7c7',
+          400: '#a0a0a0',
+          500: '#7a7a7a',
+          600: '#555555',
+          700: '#3a3a3a',
+          800: '#2a2a2a',
+          900: '#1a1a1a',
         }
       }
     },

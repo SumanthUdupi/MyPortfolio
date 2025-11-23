@@ -1,12 +1,39 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
 const Header = () => {
-  const { darkMode, toggleDarkMode } = useTheme();
+  const { darkMode, toggleDarkMode, reducedMotion, toggleReducedMotion } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLongPressing, setIsLongPressing] = useState(false);
+  const longPressTimer = useRef<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleMouseDown = () => {
+    setIsLongPressing(true);
+    longPressTimer.current = window.setTimeout(() => {
+      // Long press action: play sound and animate
+      if (audioRef.current) {
+        audioRef.current.play();
+      }
+      // Add animation class
+      const cvButton = document.getElementById('cv-button');
+      if (cvButton) {
+        cvButton.classList.add('long-press-easter-egg');
+        setTimeout(() => cvButton.classList.remove('long-press-easter-egg'), 2000);
+      }
+    }, 1000); // 1 second long press
+  };
+
+  const handleMouseUp = () => {
+    setIsLongPressing(false);
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
   };
 
   return (
@@ -19,12 +46,15 @@ const Header = () => {
         </div>
         {/* Desktop Navigation */}
         <div className="hidden sm:flex items-center space-x-6">
-          <a href="#professional-work" className="nav-link font-patrick-hand text-stone-600 dark:text-stone-400 dark:hover:text-cyan-400 transition-colors">Case Studies</a>
-          <a href="#about" className="nav-link font-patrick-hand text-stone-600 dark:text-stone-400 dark:hover:text-cyan-400 transition-colors">About</a>
-          <a href="Sumanth-Udupi-Resume.pdf" download="Sumanth-Udupi-Resume.pdf" id="cv-button" className="cv-button font-patrick-hand bg-white py-2 px-4 rounded-md shadow-md transform -rotate-2 text-stone-700">
+          <a href="#professional-work" className="nav-link font-patrick-hand text-stone-700 dark:text-stone-300 dark:hover:text-cyan-400 transition-colors">Case Studies</a>
+          <a href="#about" className="nav-link font-patrick-hand text-stone-700 dark:text-stone-300 dark:hover:text-cyan-400 transition-colors">About</a>
+          <a href="Sumanth-Udupi-Resume.pdf" download="Sumanth-Udupi-Resume.pdf" id="cv-button" className="cv-button font-patrick-hand bg-white py-2 px-4 rounded-md shadow-md transform -rotate-2 text-stone-700" onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
             Download CV (The Paperwork)
           </a>
           <button id="theme-toggle" className="light-switch" aria-label="Toggle light and dark mode" onClick={toggleDarkMode}>
+            <div className="lever"></div>
+          </button>
+          <button id="motion-toggle" className="light-switch" aria-label="Toggle reduced motion" onClick={toggleReducedMotion}>
             <div className="lever"></div>
           </button>
         </div>
@@ -56,13 +86,15 @@ const Header = () => {
             <div className="mt-12 space-y-6">
               <a href="#professional-work" className="mobile-nav-link font-patrick-hand block text-xl font-medium text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 transition-colors" onClick={toggleMobileMenu}>Case Studies</a>
               <a href="#about" className="mobile-nav-link font-patrick-hand block text-xl font-medium text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 transition-colors" onClick={toggleMobileMenu}>About</a>
-              <a href="Sumanth-Udupi-Resume.pdf" download="Sumanth-Udupi-Resume.pdf" className="mobile-cv-button font-patrick-hand inline-block bg-stone-100 dark:bg-stone-700 py-3 px-6 rounded-md shadow-md transform -rotate-1 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-600 transition-colors" onClick={toggleMobileMenu}>
+              <a href="Sumanth-Udupi-Resume.pdf" download="Sumanth-Udupi-Resume.pdf" className="mobile-cv-button font-patrick-hand inline-block bg-stone-100 dark:bg-stone-700 py-3 px-6 rounded-md shadow-md transform -rotate-1 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-600 transition-colors" onClick={toggleMobileMenu} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
                 Download CV (The Paperwork)
               </a>
             </div>
           </div>
         </div>
       </div>
+      {/* Hidden audio for easter egg */}
+      <audio ref={audioRef} src="/audio/binder-clip.mp3" preload="none" />
     </>
   );
 };
